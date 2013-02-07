@@ -164,5 +164,23 @@ msgstr[1] ""{0} Benutzer""";
 
             Assert.AreEqual(lo.ToPOBlock().Trim(), TEST_PO.Trim());
         }
+
+        [TestMethod]
+        public void LoadFromMOFile()
+        {
+            var lo = new Localization();
+
+            lo.LoadFromMOFile("locale/test.mo");
+
+            Assert.AreEqual(lo.Headers.Count, 11);
+            Assert.AreEqual(lo.Messages.Count, 4);
+            Assert.AreEqual(lo.Headers["Language"], "de_DE");
+            Assert.AreEqual(lo.Messages["context2\x04User"].Context, "context2");
+            Assert.AreEqual(lo.Messages["context2\x04User"].Id, "User");
+            Assert.AreEqual(lo.Messages["context2\x04User"].Plural, "Users");
+            Assert.AreEqual(lo.Messages["context2\x04User"].Translations.Length, 2);
+            Assert.AreEqual(lo.Messages["context2\x04User"].Translations[0], "Benutzer");
+            Assert.AreEqual(lo.Messages["context2\x04User"].Translations[1], "Benutzer");
+        }
     }
 }

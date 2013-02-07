@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -294,6 +294,116 @@ namespace GettextDotNET
             }
         }
 
+        public void LoadFromMOFile(string fileName)
+        {
+            using (var reader = new BinaryReader(File.OpenRead(fileName)))
+            {
+                // Check the magic bytes to see if it is an .mo file
+                var magic = reader.ReadUInt32();
+                if (magic != 0x950412de)
+                {
+                    throw new Exception(String.Format("`{0}` is not a valid .mo file.", fileName));
+                }
+
+                // Check the version of the file 
+                var revision = reader.ReadUInt32();
+                if (revision != 0)
+                {
+                    throw new Exception(String.Format("`{0}`: Unsupported version.", fileName));
+                }
+
+                Headers.Clear();
+                Messages.Clear();
+
+                // Read number of strings, and the offset of the string tables
+                var n = reader.ReadUInt32();
+                var originalOff = reader.ReadUInt32();
+                var translatedOff = reader.ReadUInt32();
+
+                // Positions of string tables
+                var originalPositions = new Tuple<long, long>[n];
+                var translatedPositions = new Tuple<long, long>[n];
+
+                // Go to the beginning of the original table
+                reader.BaseStream.Seek(originalOff, SeekOrigin.Begin);
+
+                // Read original string positions
+                for (int i = 0; i < n; i++)
+                {
+                    var size = reader.ReadUInt32();
+                    var off = reader.ReadUInt32();
+                    originalPositions[i] = new Tuple<long, long>(size, off);
+                }
+
+                // Go to the beginning of the translated table
+                reader.BaseStream.Seek(translatedOff, SeekOrigin.Begin);
+
+                // Read translated string positions
+                for (int i = 0; i < n; i++)
+                {
+                    var size = reader.ReadUInt32();
+                    var off = reader.ReadUInt32();
+                    translatedPositions[i] = new Tuple<long, long>(size, off);
+                }
+
+                // Read messages
+                for (int i = 0; i < n; i++)
+                {
+                    var origPos = originalPositions[i];
+                    var transPos = translatedPositions[i];
+
+                    // Read original
+                    reader.BaseStream.Seek(origPos.Item2, SeekOrigin.Begin);
+                    var orig = UTF8Encoding.UTF8.GetString(reader.ReadBytes((int)origPos.Item1)); // TODO: Support encoding
+
+                    // Read translations
+                    reader.BaseStream.Seek(transPos.Item2, SeekOrigin.Begin);
+                    var trans = UTF8Encoding.UTF8.GetString(reader.ReadBytes((int)transPos.Item1)); // TODO: Support encoding
+
+                    // Headers -> parse them
+                    if (String.IsNullOrEmpty(orig))
+                    {
+                        ParseHeaders(ProcessMessageString(trans));
+                    }
+                    else
+                    {
+                        var message = new Message();
+
+                        // Extract plural
+                        var parts = orig.Split(new[] { '\x00' }, 2);
+                        if (parts.Length > 1)
+                        {
+                            message.Plural = parts[1];
+                            orig = parts[0];
+                        }
+
+                        var id = orig;
+
+                        // Extract context
+                        parts = orig.Split(new []{ '\x04' }, 2);
+                        if (parts.Length > 1)
+                        {
+                            message.Context = parts[0];
+                            orig = parts[1];
+                        }
+
+                        message.Id = orig;
+                        message.Translations = trans.Split('\x00');
+
+                        // Add message
+                        if (Messages.ContainsKey(id))
+                        {
+                            Messages[id] = message;
+                        }
+                        else
+                        {
+                            Messages.Add(id, message);
+                        }
+                    }
+                }
+            }
+        }
+
         private string ProcessMessageString(string str)
         {
             Regex EscapeRegex = new Regex(@"\\([\\""n])", RegexOptions.Compiled);
@@ -305,7 +415,7 @@ namespace GettextDotNET
 
         private void ParseHeaders(string headerString)
         {
-            Headers = headerString.Split('\n').Select(s => s.Split(new[] { ':' }, 2)).ToDictionary(v => v[0].Trim(), v => v[1].Trim());
+            Headers = headerString.Trim().Split('\n').Select(s => s.Split(new[] { ':' }, 2)).ToDictionary(v => v[0].Trim(), v => v[1].Trim());
         }
 
         public void Load(string fileName, bool loadComments = false)

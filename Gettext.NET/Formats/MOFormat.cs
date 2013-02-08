@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace GettextDotNET.Formats
 {
+    /// <summary>
+    /// Provides functions for using files in the .mo format.
+    /// </summary>
     public class MOFormat : ILocalizationFormat
     {
+        /// <summary>
+        /// Dumps the specified localization to the stream in the .mo format.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="writeComments">If set to <c>true</c>, comments will be included in the ouput.</param>
         public void Write(Localization localization, Stream stream, bool writeComments = false)
         {
             // BinaryWriter to the MO file
@@ -96,6 +105,17 @@ namespace GettextDotNET.Formats
             }
         }
 
+        /// <summary>
+        /// Attempts to read messages and headers from the stream in the .mo format.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="loadComments">If set to <c>true</c>, comments will be loaded from the stream.</param>
+        /// <exception cref="System.Exception">
+        /// Not a valid .mo file.
+        /// or
+        /// Unsupported .mo version.
+        /// </exception>
         public void Read(Localization localization, Stream stream, bool loadComments = false)
         {
             using (var reader = new BinaryReader(stream))

@@ -8,10 +8,17 @@ using System.Threading.Tasks;
 
 namespace GettextDotNET.Formats
 {
+    /// <summary>
+    /// Provides functions for using files in the .po format.
+    /// </summary>
     public class POFormat : ILocalizationFormat
     {
-        private enum CommandType { none, msgid, msgid_plural, msgstr, msgctxt, domain }
-
+        /// <summary>
+        /// Dumps the specified localization to the stream in the .po format.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="writeComments">If set to <c>true</c>, comments will be included in the ouput.</param>
         public void Write(Localization localization, Stream stream, bool writeComments = false)
         {
             using (var writer = new StreamWriter(stream))
@@ -24,10 +31,17 @@ namespace GettextDotNET.Formats
                 writer.Write("\"\n\n");
 
                 // Messages
-                writer.Write(String.Join("\n", localization.Messages.Values.Select(m => m.ToPOBlock())));
+                writer.Write(String.Join("\n", localization.Messages.Values.Select(m => GetMessagePOBlock(m))));
             }
         }
 
+        /// <summary>
+        /// Attempts to read messages and headers from the stream in the .po format.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="loadComments">If set to <c>true</c>, comments will be loaded from the stream.</param>
+        /// <exception cref="System.Exception"></exception>
         public void Read(Localization localization, Stream stream, bool loadComments = false)
         {
             using (var reader = new StreamReader(stream))
@@ -289,6 +303,73 @@ namespace GettextDotNET.Formats
             }
         }
 
+        private enum CommandType { none, msgid, msgid_plural, msgstr, msgctxt, domain }
+
+        private string GetMessagePOBlock(Message msg, bool includeComments = true)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            if (includeComments)
+            {
+                foreach (var Comment in msg.TranslatorComments)
+                {
+                    builder.Append("#  " + Comment + "\n");
+                }
+
+                foreach (var Comment in msg.Comments)
+                {
+                    builder.Append("#. " + Comment + "\n");
+                }
+
+                foreach (var Reference in msg.References)
+                {
+                    builder.Append("#: " + Reference + "\n");
+                }
+
+                if (msg.Flags.Count > 0)
+                {
+                    builder.Append("#, " + String.Join(", ", msg.Flags) + "\n");
+                }
+
+                if (!String.IsNullOrEmpty(msg.PreviousContext))
+                {
+                    builder.Append(String.Format("#| msgctxt \"{0}\"\n", msg.PreviousContext));
+                }
+
+                if (!String.IsNullOrEmpty(msg.PreviousId))
+                {
+                    builder.Append(String.Format("#| msgid \"{0}\"\n", msg.PreviousId));
+                }
+            }
+
+            if (!String.IsNullOrEmpty(msg.Context))
+            {
+                builder.Append(String.Format("msgctxt \"{0}\"\n", msg.Context));
+            }
+
+            builder.Append(String.Format("msgid \"{0}\"\n", msg.Id));
+
+            if (!String.IsNullOrEmpty(msg.Plural))
+            {
+                builder.Append(String.Format("msgid_plural \"{0}\"\n", msg.Plural));
+            }
+
+            if (msg.Translations.Length > 1)
+            {
+                int i = 0;
+                foreach (var Translation in msg.Translations)
+                {
+                    builder.Append(String.Format("msgstr[{0}] \"{1}\"\n", i++, Translation));
+                }
+            }
+            else
+            {
+                builder.Append(String.Format("msgstr \"{0}\"\n", msg.Translations[0]));
+            }
+
+            return builder.ToString();
+        }
+        
         private string ProcessMessageString(string str)
         {
             Regex EscapeRegex = new Regex(@"\\([\\""n])", RegexOptions.Compiled);

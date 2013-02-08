@@ -8,6 +8,7 @@ namespace GettextDotNET.Tests
     [TestClass]
     public class LocalizationTest
     {
+        #region Test Data
         const string TEST_PO = @"
 msgid """"
 msgstr """"
@@ -28,6 +29,32 @@ msgid ""One User""
 msgid_plural ""{0} Users""
 msgstr[0] ""Ein Benutzer""
 msgstr[1] ""{0} Benutzer""";
+        #endregion
+
+        #region Util Functions
+        static bool FileEquals(string path1, string path2)
+        {
+            var info1 = new FileInfo(path1);
+            var info2 = new FileInfo(path2);
+
+            if (info1.Length != info2.Length)
+            {
+                return false;
+            }
+
+            byte[] file1 = File.ReadAllBytes(path1);
+            byte[] file2 = File.ReadAllBytes(path2);
+
+            for (int i = 0; i < file1.Length; i++)
+            {
+                if (file1[i] != file2[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        #endregion
 
         [TestMethod]
         public void TestLoading()
@@ -110,7 +137,7 @@ msgstr[1] ""{0} Benutzer""";
         }
 
         [TestMethod]
-        public void TestLoadFromFile()
+        public void TestLoadFromPOFile()
         {
             var fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".po";
 
@@ -132,7 +159,7 @@ msgstr[1] ""{0} Benutzer""";
         }
 
         [TestMethod]
-        public void TestSaveToFile()
+        public void TestSaveToPOFile()
         {
             var lo = new Localization();
 
@@ -156,7 +183,7 @@ msgstr[1] ""{0} Benutzer""";
         }
 
         [TestMethod]
-        public void TestToPOBlock()
+        public void TestToPOString()
         {
             var lo = new Localization();
 
@@ -183,30 +210,6 @@ msgstr[1] ""{0} Benutzer""";
             Assert.AreEqual(lo.GetMessage("User", "context2").Translations[1], "Benutzer");
         }
 
-
-        static bool FileEquals(string path1, string path2)
-        {
-            var info1 = new FileInfo(path1);
-            var info2 = new FileInfo(path2);
-
-            if (info1.Length != info2.Length)
-            {
-                return false;
-            }
-
-            byte[] file1 = File.ReadAllBytes(path1);
-            byte[] file2 = File.ReadAllBytes(path2);
-
-            for (int i = 0; i < file1.Length; i++)
-            {
-                if (file1[i] != file2[i])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         [TestMethod]
         public void TestSaveToMOFile()
         {
@@ -220,6 +223,92 @@ msgstr[1] ""{0} Benutzer""";
             Assert.IsTrue(FileEquals("locale/test.mo", fileName));
 
             File.Delete(fileName);
+        }
+    
+        [TestMethod]
+        public void TestAddRemove()
+        {
+            var lo = new Localization();
+
+            Assert.AreEqual(lo.Count, 0);
+
+            lo.Add(new Message
+                {
+                    Id = "Test",
+                    Context = "Fubar",
+                    Translations = new string[] { "Test2" }
+                });
+
+            var msg = new Message
+                {
+                    Id = "23",
+                    Translations = new string[] { "42" }
+                };
+
+            lo.Add(msg);
+            
+            Assert.AreEqual(lo.Count, 2);
+            Assert.IsTrue(lo.Contains("Test", "Fubar"));
+            Assert.AreEqual(lo["Test", "Fubar"].Translations[0], "Test2");
+            Assert.IsTrue(lo.Contains("23"));
+            Assert.AreEqual(lo["23"].Translations[0], "42");
+
+            lo.Remove(msg);
+
+            Assert.AreEqual(lo.Count, 1);
+            Assert.IsTrue(lo.Contains("Test", "Fubar"));
+            Assert.IsFalse(lo.Contains("23"));
+
+            lo.Remove("Test", "Fubar");
+
+            Assert.AreEqual(lo.Count, 0);
+            Assert.IsFalse(lo.Contains("Test", "Fubar"));
+        }
+
+        [TestMethod]
+        public void TestChangeMessage()
+        {
+            var lo = new Localization();
+
+            var msg = new Message
+            {
+                Id = "Test"
+            };
+
+            lo.Add(msg);
+
+            Assert.IsTrue(lo.Contains("Test"));
+            Assert.IsFalse(lo.Contains("Test", "context"));
+            Assert.IsFalse(lo.Contains("23"));
+            Assert.IsFalse(lo.Contains("23", "context"));
+
+            msg.Id = "23";
+
+            Assert.IsFalse(lo.Contains("Test"));
+            Assert.IsFalse(lo.Contains("Test", "context"));
+            Assert.IsTrue(lo.Contains("23"));
+            Assert.IsFalse(lo.Contains("23", "context"));
+
+            msg.Context = "context";
+
+            Assert.IsFalse(lo.Contains("Test"));
+            Assert.IsFalse(lo.Contains("Test", "context"));
+            Assert.IsFalse(lo.Contains("23"));
+            Assert.IsTrue(lo.Contains("23", "context"));
+
+            msg.Id = "Test";
+
+            Assert.IsFalse(lo.Contains("Test"));
+            Assert.IsTrue(lo.Contains("Test", "context"));
+            Assert.IsFalse(lo.Contains("23"));
+            Assert.IsFalse(lo.Contains("23", "context"));
+
+            msg.Context = "";
+
+            Assert.IsTrue(lo.Contains("Test"));
+            Assert.IsFalse(lo.Contains("Test", "context"));
+            Assert.IsFalse(lo.Contains("23"));
+            Assert.IsFalse(lo.Contains("23", "context"));
         }
     }
 }

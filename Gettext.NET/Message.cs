@@ -10,13 +10,27 @@ namespace GettextDotNET
     /// </summary>
     public class Message
     {
+        internal Localization loc;
+        private string _id;
+        private string _context;
+
         /// <summary>
         /// Gets or sets the id of the message.
         /// </summary>
         /// <value>
         /// The id.
         /// </value>
-        public string Id { get; set; }
+        public string Id {
+            get { return _id; }
+            set {
+                var oldId = _id;
+                _id = value;
+                if (loc != null)
+                {
+                    loc.UpdateMessage(this, oldId, _context);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the (optional) plural of the message.
@@ -32,7 +46,19 @@ namespace GettextDotNET
         /// <value>
         /// The context.
         /// </value>
-        public string Context { get; set; }
+        public string Context
+        {
+            get { return _context; }
+            set
+            {
+                var oldcontext = _context;
+                _context = value;
+                if (loc != null)
+                {
+                    loc.UpdateMessage(this, _id, oldcontext);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the translations of the message.

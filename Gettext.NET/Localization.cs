@@ -132,6 +132,8 @@ namespace GettextDotNET
             {
                 Messages[key] = msg;
             }
+
+            msg.loc = this;
         }
 
         /// <summary>
@@ -169,7 +171,14 @@ namespace GettextDotNET
         /// </returns>
         public bool Remove(string id, string context = null)
         {
-            return Messages.Remove(GetKey(id, context));
+            var key = GetKey(id, context);
+
+            if (Messages.ContainsKey(key))
+            {
+                Messages[key].loc = null;
+            }
+
+            return Messages.Remove(key);
         }
 
         /// <summary>
@@ -202,7 +211,7 @@ namespace GettextDotNET
         /// <param name="Id">The id of the message.</param>
         /// <param name="Context">The context of the message.</param>
         /// <returns></returns>
-        public Message this[string Id, string Context]
+        public Message this[string Id, string Context = null]
         {
             get
             {
@@ -215,6 +224,11 @@ namespace GettextDotNET
         /// </summary>
         public void Clear()
         {
+            foreach(var msg in Messages.Values)
+            {
+                msg.loc = null;
+            }
+
             Messages.Clear();
             Headers.Clear();
         }
@@ -228,6 +242,15 @@ namespace GettextDotNET
         public int Count
         {
             get { return Messages.Count; }
+        }
+
+        internal void UpdateMessage(Message message, string oldId, string oldContext)
+        {
+            var key = GetKey(oldId, oldContext);
+            Messages.Remove(key);
+
+            key = GetKey(message.Id, message.Context);
+            Messages.Add(key, message);
         }
     }
 }

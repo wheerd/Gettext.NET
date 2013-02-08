@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GettextDotNET;
@@ -112,7 +112,7 @@ msgstr[1] ""{0} Benutzer""";
         [TestMethod]
         public void TestLoadFromFile()
         {
-            var fileName = System.IO.Path.GetTempPath()  + Guid.NewGuid().ToString() + ".po";
+            var fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".po";
 
             try
             {
@@ -153,8 +153,8 @@ msgstr[1] ""{0} Benutzer""";
             {
                 File.Delete(fileName);
             }
-        }      
-        
+        }
+
         [TestMethod]
         public void TestToPOBlock()
         {
@@ -166,7 +166,7 @@ msgstr[1] ""{0} Benutzer""";
         }
 
         [TestMethod]
-        public void LoadFromMOFile()
+        public void TestLoadFromMOFile()
         {
             var lo = new Localization();
 
@@ -181,6 +181,45 @@ msgstr[1] ""{0} Benutzer""";
             Assert.AreEqual(lo.Messages["context2\x04User"].Translations.Length, 2);
             Assert.AreEqual(lo.Messages["context2\x04User"].Translations[0], "Benutzer");
             Assert.AreEqual(lo.Messages["context2\x04User"].Translations[1], "Benutzer");
+        }
+
+
+        static bool FileEquals(string path1, string path2)
+        {
+            var info1 = new FileInfo(path1);
+            var info2 = new FileInfo(path2);
+
+            if (info1.Length != info2.Length)
+            {
+                return false;
+            }
+
+            byte[] file1 = File.ReadAllBytes(path1);
+            byte[] file2 = File.ReadAllBytes(path2);
+
+            for (int i = 0; i < file1.Length; i++)
+            {
+                if (file1[i] != file2[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        [TestMethod]
+        public void TestSaveToMOFile()
+        {
+            var lo = new Localization();
+
+            var fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".mo";
+
+            lo.LoadFromMOFile("locale/test.mo");
+            lo.SaveToMOFile(fileName);
+
+            Assert.IsTrue(FileEquals("locale/test.mo", fileName));
+
+            File.Delete(fileName);
         }
     }
 }

@@ -321,8 +321,8 @@ namespace GettextDotNET
                 var translatedOff = reader.ReadUInt32();
 
                 // Positions of string tables
-                var originalPositions = new Tuple<long, long>[n];
-                var translatedPositions = new Tuple<long, long>[n];
+                var originalPositions = new Tuple<uint, uint>[n];
+                var translatedPositions = new Tuple<uint, uint>[n];
 
                 // Go to the beginning of the original table
                 reader.BaseStream.Seek(originalOff, SeekOrigin.Begin);
@@ -332,7 +332,7 @@ namespace GettextDotNET
                 {
                     var size = reader.ReadUInt32();
                     var off = reader.ReadUInt32();
-                    originalPositions[i] = new Tuple<long, long>(size, off);
+                    originalPositions[i] = new Tuple<uint, uint>(size, off);
                 }
 
                 // Go to the beginning of the translated table
@@ -343,7 +343,7 @@ namespace GettextDotNET
                 {
                     var size = reader.ReadUInt32();
                     var off = reader.ReadUInt32();
-                    translatedPositions[i] = new Tuple<long, long>(size, off);
+                    translatedPositions[i] = new Tuple<uint, uint>(size, off);
                 }
 
                 // Read messages
@@ -363,7 +363,7 @@ namespace GettextDotNET
                     // Headers -> parse them
                     if (String.IsNullOrEmpty(orig))
                     {
-                        ParseHeaders(ProcessMessageString(trans));
+                        ParseHeaders(trans);
                     }
                     else
                     {
@@ -380,7 +380,7 @@ namespace GettextDotNET
                         var id = orig;
 
                         // Extract context
-                        parts = orig.Split(new []{ '\x04' }, 2);
+                        parts = orig.Split(new[] { '\x04' }, 2);
                         if (parts.Length > 1)
                         {
                             message.Context = parts[0];
@@ -401,6 +401,92 @@ namespace GettextDotNET
                         }
                     }
                 }
+            }
+        }
+        public void SaveToMOFile(string fileName)
+        {
+            // BinaryWriter to the MO file
+            using (var writer = new BinaryWriter(File.Create(fileName)))
+            {
+                // Write magic bytes and version number
+                writer.Write(0x950412de);
+                writer.Write(0u);
+
+                uint n = (uint)(Messages.Count + 1);
+                
+                writer.Write(n);            // Write number of strings
+                writer.Write(28);           // Start offset for the original string table (right after the header)
+                writer.Write(28 + n * 8);   // Start offset for the translated string table (right after the previous table)
+                writer.Write(0u);           // No hash table
+                writer.Write(0u);           // No hash table
+
+                // Used for the actual strings to append at the end of the file
+                var sb = new StringBuilder();
+
+                // Start offset after the tables
+                uint pos = 28 + 16 * n;
+
+                // Format headers as message string
+                var headers = String.Join("\n", Headers.Select(h => String.Format("{0}: {1}", h.Key, h.Value)));
+
+                // Write the original table entry for the header string (empty id)
+                writer.Write(0u);
+                writer.Write(pos);
+                pos++;
+                sb.Append("\x00");
+
+                // Sort messages lexicographically
+                var messages = Messages.OrderBy(v => v.Key).Select(v => v.Value).ToArray();
+
+                // Write table entry for the original strings (including context and plural) and append the strings to the end
+                foreach (var message in messages)
+                {
+                    // Prepend context separated by \x04
+                    var key = String.IsNullOrEmpty(message.Context) ? message.Id : message.Context + "\x04" + message.Id;
+
+                    // Append plural separated by \x00
+                    if (!String.IsNullOrEmpty(message.Plural))
+                    {
+                        key += "\x00" + message.Plural;
+                    }
+
+                    // Write table entry (size + offset)
+                    writer.Write((uint)key.Length);
+                    writer.Write(pos);
+
+                    // Advance the position
+                    pos += (uint)(key.Length + 1);
+
+                    // Add string add the end
+                    sb.Append(key + "\x00");
+                }
+
+                // Write the table entry for the header and add the header string to the end
+                writer.Write((uint)headers.Length);
+                writer.Write(pos);
+                pos += (uint)headers.Length + 1;
+                sb.Append(headers + "\x00");
+
+                // Write table entry for the translated strings and append the strings to the end
+                foreach (var message in messages)
+                {
+                    // translations are spearated by \x00
+                    var translations = String.Join("\x00", message.Translations);
+
+                    // Write table entry (size + offset)
+                    writer.Write((uint)translations.Length);
+                    writer.Write(pos);
+
+                    // Advance the position
+                    pos += (uint)(translations.Length + 1);
+
+                    // Add string add the end
+                    sb.Append(translations + "\x00");
+                }
+
+                // Append the collected strings
+                var data = Encoding.ASCII.GetBytes(sb.ToString());
+                writer.BaseStream.Write(data, 0, data.Length);
             }
         }
 

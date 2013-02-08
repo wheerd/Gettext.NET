@@ -1,4 +1,4 @@
-namespace GettextDotNET
+namespace GettextDotNet
 {
     public class Internationalization
     {

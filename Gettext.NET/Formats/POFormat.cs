@@ -6,13 +6,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace GettextDotNET.Formats
+namespace GettextDotNet.Formats
 {
     /// <summary>
     /// Provides functions for using files in the .po format.
     /// </summary>
     public class POFormat : ILocalizationFormat
     {
+        public string[] FileExtensions { get { return new string[] { ".po", ".pot" }; } }
+
         /// <summary>
         /// Dumps the specified localization to the stream in the .po format.
         /// </summary>
@@ -336,14 +338,14 @@ namespace GettextDotNET.Formats
 
             if (!String.IsNullOrEmpty(msg.Context))
             {
-                builder.Append(String.Format("msgctxt \"{0}\"\n", msg.Context));
+                builder.Append(String.Format("msgctxt \"{0}\"\n", msg.Context.Replace("\n", "\\n\"\n\"")));
             }
 
-            builder.Append(String.Format("msgid \"{0}\"\n", msg.Id));
+            builder.Append(String.Format("msgid \"{0}\"\n", msg.Id.Replace("\n", "\\n\"\n\"")));
 
             if (!String.IsNullOrEmpty(msg.Plural))
             {
-                builder.Append(String.Format("msgid_plural \"{0}\"\n", msg.Plural));
+                builder.Append(String.Format("msgid_plural \"{0}\"\n", msg.Plural.Replace("\n", "\\n\"\n\"")));
             }
 
             if (msg.Translations.Length > 1)
@@ -351,12 +353,12 @@ namespace GettextDotNET.Formats
                 int i = 0;
                 foreach (var Translation in msg.Translations)
                 {
-                    builder.Append(String.Format("msgstr[{0}] \"{1}\"\n", i++, Translation));
+                    builder.Append(String.Format("msgstr[{0}] \"{1}\"\n", i++, Translation.Replace("\n", "\\n\"\n\"")));
                 }
             }
             else
             {
-                builder.Append(String.Format("msgstr \"{0}\"\n", msg.Translations[0]));
+                builder.Append(String.Format("msgstr \"{0}\"\n", msg.Translations[0].Replace("\n", "\\n\"\n\"")));
             }
 
             return builder.ToString();

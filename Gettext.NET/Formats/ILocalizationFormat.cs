@@ -6,13 +6,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace GettextDotNET.Formats
+namespace GettextDotNet.Formats
 {
     /// <summary>
     /// Provides access to translated strings in a specific format and offers methods to read/write this format.
     /// </summary>
     public interface ILocalizationFormat
     {
+        string[] FileExtensions { get; }
+
         /// <summary>
         /// Dumps the specified localization to the stream in this format.
         /// </summary>

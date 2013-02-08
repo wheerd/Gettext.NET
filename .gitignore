@@ -4,3 +4,6 @@
 /Gettext.NET/bin
 /Gettext.NET/obj
 /Gettext.NET.v11.suo
+/GetextDotNet.Tools/bin
+/GetextDotNet.Tools/obj
+/GetextDotNet.Tools/GetextDotNet.Tools.csproj.user

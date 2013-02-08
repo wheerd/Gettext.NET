@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GettextDotNET.Formats;
+using GettextDotNet.Formats;
 
-namespace GettextDotNET.Tests
+namespace GettextDotNet.Tests
 {
     [TestClass]
     public class LocalizationTest

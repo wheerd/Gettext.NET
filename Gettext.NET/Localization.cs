@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using GettextDotNET.Formats;
+using GettextDotNet.Formats;
 
-namespace GettextDotNET
+namespace GettextDotNet
 {
     /// <summary>
     /// A collection of localized/translated strings

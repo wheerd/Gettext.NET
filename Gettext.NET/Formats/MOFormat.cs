@@ -5,13 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GettextDotNET.Formats
+namespace GettextDotNet.Formats
 {
     /// <summary>
     /// Provides functions for using files in the .mo format.
     /// </summary>
     public class MOFormat : ILocalizationFormat
     {
+        public string[] FileExtensions { get { return new string[] { ".mo" }; } }
+
         /// <summary>
         /// Dumps the specified localization to the stream in the .mo format.
         /// </summary>

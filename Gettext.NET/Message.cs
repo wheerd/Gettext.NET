@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GettextDotNET
+namespace GettextDotNet
 {
     /// <summary>
     /// The translation(s) (<see cref="Translations"/>) of a specific string (<see cref="Id"/>) and its

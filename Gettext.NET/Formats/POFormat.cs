@@ -31,7 +31,7 @@ namespace GettextDotNET.Formats
                 writer.Write("\"\n\n");
 
                 // Messages
-                writer.Write(String.Join("\n", localization.Messages.Values.Select(m => GetMessagePOBlock(m))));
+                writer.Write(String.Join("\n", localization.GetMessages().Select(m => GetMessagePOBlock(m))));
             }
         }
 
@@ -117,15 +117,7 @@ namespace GettextDotNET.Formats
 
                                 message.Translations = t;
 
-                                // Add message
-                                if (!localization.Messages.ContainsKey(message.Id))
-                                {
-                                    localization.Messages.Add(message.Id, message);
-                                }
-                                else
-                                {
-                                    localization.Messages[message.Id] = message;
-                                }
+                                localization.Add(message);
                             }
 
                             // Reset message information
@@ -284,21 +276,21 @@ namespace GettextDotNET.Formats
                             translations[lastMsgNo] = lastString;
                             break;
                     }
-                }
 
-                // Process last message
-                if (!String.IsNullOrEmpty(message.Id) && !localization.Messages.ContainsKey(message.Id))
-                {
-                    var t = new string[translations.Keys.Max() + 1];
-
-                    foreach (var kv in translations)
+                    // Process last message
+                    if (!String.IsNullOrEmpty(message.Id))
                     {
-                        t[kv.Key] = kv.Value;
+                        var t = new string[translations.Keys.Max() + 1];
+
+                        foreach (var kv in translations)
+                        {
+                            t[kv.Key] = kv.Value;
+                        }
+
+                        message.Translations = t;
+
+                        localization.Add(message);
                     }
-
-                    message.Translations = t;
-
-                    localization.Messages.Add(message.Id, message);
                 }
             }
         }

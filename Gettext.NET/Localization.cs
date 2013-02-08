@@ -13,13 +13,12 @@ namespace GettextDotNET
     /// </summary>
     public class Localization
     {
-        /// <summary>
-        /// Gets or sets the translation messages.
-        /// </summary>
-        /// <value>
-        /// The messages.
-        /// </value>
-        public Dictionary<string, Message> Messages { get; set; }
+        private Dictionary<string, Message> Messages { get; set; }
+
+        private string GetKey(string id, string context = null)
+        {
+            return (String.IsNullOrEmpty(context) ? "" : context + "\x04") + id;
+        }
 
         /// <summary>
         /// Gets or sets the localization meta information (headers).
@@ -104,6 +103,131 @@ namespace GettextDotNET
 
                 new Format().Read(this, stream, loadComments);
             }
+        }
+
+        /// <summary>
+        /// Gets a translation message from the localization.
+        /// </summary>
+        /// <param name="id">The id of the message.</param>
+        /// <param name="context">The context of the message.</param>
+        /// <returns>The message.</returns>
+        public Message GetMessage(string id, string context = null)
+        {
+            return Messages[GetKey(id, context)];
+        }
+
+        /// <summary>
+        /// Adds the specified message to the localization.
+        /// </summary>
+        /// <param name="msg">The message.</param>
+        public void Add(Message msg)
+        {
+            var key = GetKey(msg.Id, msg.Context);
+
+            if (!Messages.ContainsKey(key))
+            {
+                Messages.Add(key, msg);
+            }
+            else
+            {
+                Messages[key] = msg;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether a translation for the specified id exists in the localization.
+        /// </summary>
+        /// <param name="id">The id of the message.</param>
+        /// <param name="context">The context of the message.</param>
+        /// <returns>
+        ///   <c>true</c> if a translation for the specified id exists in the localization; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Contains(string id, string context = null)
+        {
+            return Messages.ContainsKey(GetKey(id, context));
+        }
+
+        /// <summary>
+        /// Determines whether the translation message exists in the localization.
+        /// </summary>
+        /// <param name="msg">The MSG.</param>
+        /// <returns>
+        ///   <c>true</c> if the translation message exists in the localization; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Contains(Message msg)
+        {
+            return Messages.ContainsValue(msg);
+        }
+
+        /// <summary>
+        /// Removes the specified translation message.
+        /// </summary>
+        /// <param name="id">The id of the message.</param>
+        /// <param name="context">The context of the message.</param>
+        /// <returns>
+        ///   <c>true</c> if the translation message was removed from the localization; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Remove(string id, string context = null)
+        {
+            return Messages.Remove(GetKey(id, context));
+        }
+
+        /// <summary>
+        /// Removes the specified translation message.
+        /// </summary>
+        /// <param name="msg">The message.</param>
+        /// <returns>
+        ///   <c>true</c> if the translation message was removed from the localization; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Remove(Message msg)
+        {
+            return Remove(msg.Id, msg.Context);
+        }
+
+        /// <summary>
+        /// Gets all the messages in the localization.
+        /// </summary>
+        /// <returns>All the messages in the localization</returns>
+        public IEnumerable<Message> GetMessages()
+        {
+            return Messages.Values;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Message"/> with the specified id and context.
+        /// </summary>
+        /// <value>
+        /// The <see cref="Message"/>.
+        /// </value>
+        /// <param name="Id">The id of the message.</param>
+        /// <param name="Context">The context of the message.</param>
+        /// <returns></returns>
+        public Message this[string Id, string Context]
+        {
+            get
+            {
+                return GetMessage(Id, Context);
+            }
+        }
+
+        /// <summary>
+        /// Clears all translation messages and the headers.
+        /// </summary>
+        public void Clear()
+        {
+            Messages.Clear();
+            Headers.Clear();
+        }
+
+        /// <summary>
+        /// Gets the count of translation messages.
+        /// </summary>
+        /// <value>
+        /// The count of translation messages.
+        /// </value>
+        public int Count
+        {
+            get { return Messages.Count; }
         }
     }
 }

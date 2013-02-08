@@ -44,58 +44,58 @@ msgstr[1] ""{0} Benutzer""";
             Assert.IsTrue(lo.Headers.ContainsKey("Language"));
             Assert.AreEqual(lo.Headers["Language"], "de_DE");
 
-            Assert.AreEqual(lo.Messages.Count, 2);
-            Assert.IsTrue(lo.Messages.ContainsKey("Welcome, {0}!"));
-            Assert.IsTrue(lo.Messages.ContainsKey("One User"));
+            Assert.AreEqual(lo.Count, 2);
+            Assert.IsTrue(lo.Contains("Welcome, {0}!", "context"));
+            Assert.IsTrue(lo.Contains("One User"));
 
             // Test message meta data
             // ======================
 
             // Comments
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Comments.Count, 1);
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Comments[0], "A welcome message for the user");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Comments.Count, 1);
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Comments[0], "A welcome message for the user");
 
             // Flags
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Flags.Count, 2);
-            Assert.IsTrue(lo.Messages["Welcome, {0}!"].Flags.Contains("fuzzy"));
-            Assert.IsTrue(lo.Messages["Welcome, {0}!"].Flags.Contains("csharp-format"));
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Flags.Count, 2);
+            Assert.IsTrue(lo.GetMessage("Welcome, {0}!", "context").Flags.Contains("fuzzy"));
+            Assert.IsTrue(lo.GetMessage("Welcome, {0}!", "context").Flags.Contains("csharp-format"));
 
             // Translator comments
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].TranslatorComments.Count, 1);
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].TranslatorComments[0], "Fubar");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").TranslatorComments.Count, 1);
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").TranslatorComments[0], "Fubar");
 
             // References
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].References.Count, 1);
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].References[0], "file.cs");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").References.Count, 1);
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").References[0], "file.cs");
 
             // Previous id
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].PreviousId, "Welcome, {0}.");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").PreviousId, "Welcome, {0}.");
 
             // Previous context
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].PreviousContext, "oldcontext");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").PreviousContext, "oldcontext");
 
             // Test message data
             // =================
 
             // Context
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Context, "context");
-            Assert.AreEqual(lo.Messages["One User"].Context, "");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Context, "context");
+            Assert.AreEqual(lo.GetMessage("One User").Context, "");
 
             // Id
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Id, "Welcome, {0}!");
-            Assert.AreEqual(lo.Messages["One User"].Id, "One User");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Id, "Welcome, {0}!");
+            Assert.AreEqual(lo.GetMessage("One User").Id, "One User");
 
             // Plural
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Plural, null);
-            Assert.AreEqual(lo.Messages["One User"].Plural, "{0} Users");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Plural, null);
+            Assert.AreEqual(lo.GetMessage("One User").Plural, "{0} Users");
 
             // Translations
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Translations.Length, 1);
-            Assert.AreEqual(lo.Messages["Welcome, {0}!"].Translations[0], "Willkommen, {0}!");
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Translations.Length, 1);
+            Assert.AreEqual(lo.GetMessage("Welcome, {0}!", "context").Translations[0], "Willkommen, {0}!");
 
-            Assert.AreEqual(lo.Messages["One User"].Translations.Length, 2);
-            Assert.AreEqual(lo.Messages["One User"].Translations[0], "Ein Benutzer");
-            Assert.AreEqual(lo.Messages["One User"].Translations[1], "{0} Benutzer");
+            Assert.AreEqual(lo.GetMessage("One User").Translations.Length, 2);
+            Assert.AreEqual(lo.GetMessage("One User").Translations[0], "Ein Benutzer");
+            Assert.AreEqual(lo.GetMessage("One User").Translations[1], "{0} Benutzer");
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ msgstr[1] ""{0} Benutzer""";
             lo.LoadFromString<POFormat>(TEST_PO);
 
             Assert.AreEqual(lo.Headers.Count, 2);
-            Assert.AreEqual(lo.Messages.Count, 2);
+            Assert.AreEqual(lo.Count, 2);
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ msgstr[1] ""{0} Benutzer""";
                 lo.LoadFromFile<POFormat>(fileName);
 
                 Assert.AreEqual(lo.Headers.Count, 2);
-                Assert.AreEqual(lo.Messages.Count, 2);
+                Assert.AreEqual(lo.Count, 2);
             }
             finally
             {
@@ -173,14 +173,14 @@ msgstr[1] ""{0} Benutzer""";
             lo.LoadFromFile<MOFormat>("locale/test.mo");
 
             Assert.AreEqual(lo.Headers.Count, 11);
-            Assert.AreEqual(lo.Messages.Count, 4);
+            Assert.AreEqual(lo.Count, 4);
             Assert.AreEqual(lo.Headers["Language"], "de_DE");
-            Assert.AreEqual(lo.Messages["context2\x04User"].Context, "context2");
-            Assert.AreEqual(lo.Messages["context2\x04User"].Id, "User");
-            Assert.AreEqual(lo.Messages["context2\x04User"].Plural, "Users");
-            Assert.AreEqual(lo.Messages["context2\x04User"].Translations.Length, 2);
-            Assert.AreEqual(lo.Messages["context2\x04User"].Translations[0], "Benutzer");
-            Assert.AreEqual(lo.Messages["context2\x04User"].Translations[1], "Benutzer");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Context, "context2");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Id, "User");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Plural, "Users");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Translations.Length, 2);
+            Assert.AreEqual(lo.GetMessage("User", "context2").Translations[0], "Benutzer");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Translations[1], "Benutzer");
         }
 
 

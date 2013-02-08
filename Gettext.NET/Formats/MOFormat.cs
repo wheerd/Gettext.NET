@@ -27,7 +27,7 @@ namespace GettextDotNET.Formats
                 writer.Write(0x950412de);
                 writer.Write(0u);
 
-                uint n = (uint)(localization.Messages.Count + 1);
+                uint n = (uint)(localization.Count + 1);
 
                 writer.Write(n);            // Write number of strings
                 writer.Write(28);           // Start offset for the original string table (right after the header)
@@ -51,7 +51,9 @@ namespace GettextDotNET.Formats
                 sb.Append("\x00");
 
                 // Sort messages lexicographically
-                var messages = localization.Messages.OrderBy(v => v.Key).Select(v => v.Value).ToArray();
+                var messages = localization.GetMessages().OrderBy(
+                    v => (v.Context != null ? v.Context + "\x04" : "") + v.Id
+                ).ToArray();
 
                 // Write table entry for the original strings (including context and plural) and append the strings to the end
                 foreach (var message in messages)
@@ -209,15 +211,7 @@ namespace GettextDotNET.Formats
                         message.Id = orig;
                         message.Translations = trans.Split('\x00');
 
-                        // Add message
-                        if (localization.Messages.ContainsKey(id))
-                        {
-                            localization.Messages[id] = message;
-                        }
-                        else
-                        {
-                            localization.Messages.Add(id, message);
-                        }
+                        localization.Add(message);
                     }
                 }
             }

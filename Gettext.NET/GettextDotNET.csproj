@@ -7,8 +7,8 @@
     <ProjectGuid>{234E2EC5-FECD-4D94-9265-1ECB593F0A25}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gettext.NET</RootNamespace>
-    <AssemblyName>Gettext.NET</AssemblyName>
+    <RootNamespace>GettextDotNET</RootNamespace>
+    <AssemblyName>GettextDotNET</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Gettext.NET.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\GettextDotNET.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internationalization.cs" />
+    <Compile Include="Formats\ILocalizationFormat.cs" />
     <Compile Include="Localization.cs" />
+    <Compile Include="Formats\MOFormat.cs" />
+    <Compile Include="Formats\POFormat.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -54,9 +54,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gettext.NET\Gettext.NET.csproj">
+    <ProjectReference Include="..\Gettext.NET\GettextDotNET.csproj">
       <Project>{234e2ec5-fecd-4d94-9265-1ecb593f0a25}</Project>
-      <Name>Gettext.NET</Name>
+      <Name>GettextDotNET</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

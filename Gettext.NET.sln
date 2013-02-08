@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gettext.NET", "Gettext.NET\Gettext.NET.csproj", "{234E2EC5-FECD-4D94-9265-1ECB593F0A25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettextDotNET", "Gettext.NET\GettextDotNET.csproj", "{234E2EC5-FECD-4D94-9265-1ECB593F0A25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{CD646886-2ABD-4BAD-9C92-481CC06A9139}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettextDotNET.Tests", "Tests\GettextDotNET.Tests.csproj", "{CD646886-2ABD-4BAD-9C92-481CC06A9139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

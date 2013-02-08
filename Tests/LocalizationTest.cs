@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GettextDotNET;
+using GettextDotNET.Formats;
 
-namespace Tests
+namespace GettextDotNET.Tests
 {
     [TestClass]
     public class LocalizationTest
@@ -34,7 +34,7 @@ msgstr[1] ""{0} Benutzer""";
         {
             var lo = new Localization();
 
-            lo.LoadFromString(TEST_PO, true);
+            lo.LoadFromString<POFormat>(TEST_PO, true);
 
             // Test headers
             // ============
@@ -103,7 +103,7 @@ msgstr[1] ""{0} Benutzer""";
         {
             var lo = new Localization();
 
-            lo.LoadFromString(TEST_PO);
+            lo.LoadFromString<POFormat>(TEST_PO);
 
             Assert.AreEqual(lo.Headers.Count, 2);
             Assert.AreEqual(lo.Messages.Count, 2);
@@ -120,7 +120,7 @@ msgstr[1] ""{0} Benutzer""";
 
                 var lo = new Localization();
 
-                lo.Load(fileName);
+                lo.LoadFromFile<POFormat>(fileName);
 
                 Assert.AreEqual(lo.Headers.Count, 2);
                 Assert.AreEqual(lo.Messages.Count, 2);
@@ -136,13 +136,13 @@ msgstr[1] ""{0} Benutzer""";
         {
             var lo = new Localization();
 
-            lo.LoadFromString(TEST_PO, true);
+            lo.LoadFromString<POFormat>(TEST_PO, true);
 
             var fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".po";
 
             try
             {
-                lo.Save(fileName);
+                lo.SaveToFile<POFormat>(fileName);
 
                 using (var reader = new StreamReader(fileName))
                 {
@@ -160,9 +160,9 @@ msgstr[1] ""{0} Benutzer""";
         {
             var lo = new Localization();
 
-            lo.LoadFromString(TEST_PO, true);
+            lo.LoadFromString<POFormat>(TEST_PO, true);
 
-            Assert.AreEqual(lo.ToPOBlock().Trim(), TEST_PO.Trim());
+            Assert.AreEqual(lo.ToString<POFormat>().Trim(), TEST_PO.Trim());
         }
 
         [TestMethod]
@@ -170,7 +170,7 @@ msgstr[1] ""{0} Benutzer""";
         {
             var lo = new Localization();
 
-            lo.LoadFromMOFile("locale/test.mo");
+            lo.LoadFromFile<MOFormat>("locale/test.mo");
 
             Assert.AreEqual(lo.Headers.Count, 11);
             Assert.AreEqual(lo.Messages.Count, 4);
@@ -214,8 +214,8 @@ msgstr[1] ""{0} Benutzer""";
 
             var fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".mo";
 
-            lo.LoadFromMOFile("locale/test.mo");
-            lo.SaveToMOFile(fileName);
+            lo.LoadFromFile<MOFormat>("locale/test.mo");
+            lo.SaveToFile<MOFormat>(fileName);
 
             Assert.IsTrue(FileEquals("locale/test.mo", fileName));
 

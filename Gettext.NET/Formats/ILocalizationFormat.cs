@@ -13,6 +13,12 @@ namespace GettextDotNet.Formats
     /// </summary>
     public interface ILocalizationFormat
     {
+        /// <summary>
+        /// Gets the file extensions supported by this format.
+        /// </summary>
+        /// <value>
+        /// The file extensions supported by this format.
+        /// </value>
         string[] FileExtensions { get; }
 
         /// <summary>

@@ -7,7 +7,7 @@
     <ProjectGuid>{234E2EC5-FECD-4D94-9265-1ECB593F0A25}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GettextDotNET</RootNamespace>
+    <RootNamespace>GettextDotNet</RootNamespace>
     <AssemblyName>GettextDotNET</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formats\JSONFormat.cs" />
     <Compile Include="Internationalization.cs" />
     <Compile Include="Formats\ILocalizationFormat.cs" />
     <Compile Include="Localization.cs" />

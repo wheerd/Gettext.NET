@@ -13,6 +13,12 @@ namespace GettextDotNet.Formats
     /// </summary>
     public class POFormat : ILocalizationFormat
     {
+        /// <summary>
+        /// Gets the file extensions supported for the .po format.
+        /// </summary>
+        /// <value>
+        /// The file extensions supported for the .po format.
+        /// </value>
         public string[] FileExtensions { get { return new string[] { ".po", ".pot" }; } }
 
         /// <summary>

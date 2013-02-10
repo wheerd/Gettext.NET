@@ -29,6 +29,15 @@ msgid ""One User""
 msgid_plural ""{0} Users""
 msgstr[0] ""Ein Benutzer""
 msgstr[1] ""{0} Benutzer""";
+        const string TEST_JSON = @"{""Headers"":{""Plural-Forms"":""nplurals=2; plural=(n!=1);"","+
+                                 @"""Language"":""de_DE""},""Messages"":{""context\u0004Welcome, {0}!"":" +
+                                 @"{""TranslatorComments"":[""Fubar""],""Comments"":[""A welcome message for the user""]," +
+                                 @"""References"":[""file.cs""],""Flags"":[""csharp-format"",""fuzzy""]," +
+                                 @"""PreviousContext"":""oldcontext"",""PreviousId"":""Welcome, {0}.""," +
+                                 @"""Context"":""context"",""Id"":""Welcome, {0}!"",""Translations"":" +
+                                 @"[""Willkommen, {0}!""]},""\u0004One User"":{""TranslatorComments"":[]," +
+                                 @"""Comments"":[],""References"":[],""Flags"":[],""Id"":""One User"",""Plural"":" +
+                                 @"""{0} Users"",""Translations"":[""Ein Benutzer"",""{0} Benutzer""]}}}";
         #endregion
 
         #region Util Functions
@@ -224,7 +233,33 @@ msgstr[1] ""{0} Benutzer""";
 
             File.Delete(fileName);
         }
-    
+
+        [TestMethod]
+        public void TestToJSONString()
+        {
+            var lo = new Localization();
+
+            lo.LoadFromString<POFormat>(TEST_PO, true);
+
+            var str = lo.ToString<JSONFormat>(true);
+
+            Assert.AreEqual(str, TEST_JSON);
+        }
+
+        [TestMethod]
+        public void TestFromJSONString()
+        {
+            var lo = new Localization();
+
+            lo.LoadFromString<JSONFormat>(TEST_JSON, true);
+
+            Assert.AreEqual(lo.Headers.Count, 2);
+            Assert.AreEqual(lo.Count, 2);
+            Assert.AreEqual(lo.Headers["Language"], "de_DE");
+            Assert.IsTrue(lo.Contains("Welcome, {0}!", "context"));
+            Assert.IsTrue(lo.Contains("One User"));
+        }
+
         [TestMethod]
         public void TestAddRemove()
         {

@@ -12,6 +12,12 @@ namespace GettextDotNet.Formats
     /// </summary>
     public class MOFormat : ILocalizationFormat
     {
+        /// <summary>
+        /// Gets the file extensions supported for the .mo format.
+        /// </summary>
+        /// <value>
+        /// The file extensions supported for the .mo format.
+        /// </value>
         public string[] FileExtensions { get { return new string[] { ".mo" }; } }
 
         /// <summary>

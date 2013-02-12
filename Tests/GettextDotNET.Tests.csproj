@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="LocalizationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PluralExpressionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gettext.NET\GettextDotNET.csproj">

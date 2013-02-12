@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,6 +32,7 @@ namespace GettextDotNet.Formats
         /// <param name="writeComments">If set to <c>true</c>, comments will be included in the ouput.</param>
         public void Write(Localization localization, Stream stream, bool writeComments = false)
         {
+            // Own crude json implementation to avoid dependencies
             using (var writer = new StreamWriter(stream))
             {
                 writer.Write(@"{""Headers"":{");
@@ -71,6 +72,7 @@ namespace GettextDotNet.Formats
                 line = 1;
                 offset = 0;
 
+                // Own crude json implementation to avoid dependencies
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     SkipWhitespace(reader);

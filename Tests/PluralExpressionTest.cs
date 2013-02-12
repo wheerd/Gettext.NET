@@ -33,7 +33,7 @@ namespace Tests
 
                 for (int n = 0; n < 150; n++)
                 {
-                    Assert.AreEqual(kv.Value(n), expr.Compiled(n));
+                    Assert.AreEqual(kv.Value(n), expr.Evaluate(n));
                 }
             }
         }

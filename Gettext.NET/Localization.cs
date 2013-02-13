@@ -20,13 +20,7 @@ namespace GettextDotNet
             return (String.IsNullOrEmpty(context) ? "" : context + "\x04") + id;
         }
 
-        /// <summary>
-        /// Gets or sets the localization meta information (headers).
-        /// </summary>
-        /// <value>
-        /// The headers.
-        /// </value>
-        public Dictionary<string, string> Headers { get; set; }
+        private Dictionary<string, string> AdditionalHeaders { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Localization"/> class.
@@ -34,7 +28,10 @@ namespace GettextDotNet
         public Localization()
         {
             Messages = new Dictionary<string, Message>();
-            Headers = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            AdditionalHeaders = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            Language = "en";
+            NumPlurals = 2;
+            PluralForms = new PluralExpression("n != 1");
         }
 
         /// <summary>
@@ -230,7 +227,7 @@ namespace GettextDotNet
             }
 
             Messages.Clear();
-            Headers.Clear();
+            AdditionalHeaders.Clear();
         }
 
         /// <summary>
@@ -242,6 +239,98 @@ namespace GettextDotNet
         public int Count
         {
             get { return Messages.Count; }
+        }
+
+        /// <summary>
+        /// Gets or sets the number of plural forms.
+        /// </summary>
+        /// <value>
+        /// The number of plural forms.
+        /// </value>
+        public int NumPlurals { get; set; }
+
+        /// <summary>
+        /// Gets or sets the plural form expression.
+        /// </summary>
+        /// <value>
+        /// The plural form expression.
+        /// </value>
+        public PluralExpression PluralForms { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language.
+        /// </summary>
+        /// <value>
+        /// The language.
+        /// </value>
+        public string Language { get; set; }
+
+        private static readonly Regex pluralRegex = new Regex(@"^\s*nplurals=(\d+);\s*plural=(.*);", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly Regex dateRegex = new Regex(@"(.*)\s*([+-]\d\d)(\d\d)$", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Sets the value of a header.
+        /// </summary>
+        /// <param name="name">The name of the header.</param>
+        /// <param name="value">The value of the header.</param>
+        public void SetHeader(string name, string value)
+        {
+            switch(name.ToLower())
+            {
+                case "plural-forms":
+                    var match = pluralRegex.Match(value);
+                    if (match.Success)
+                    {
+                        NumPlurals = int.Parse(match.Groups[1].Value);
+                        PluralForms = new PluralExpression(match.Groups[2].Value);
+                    }
+                    break;
+                case "language":
+                    Language = value;
+                    break;
+                default:
+                    if (AdditionalHeaders.ContainsKey(name))
+                    {
+                        AdditionalHeaders[name] = value;
+                    }
+                    else
+                    {
+                        AdditionalHeaders.Add(name, value);
+                    }
+                    break;
+            }
+
+        }
+
+        /// <summary>
+        /// Gets the value of a header.
+        /// </summary>
+        /// <param name="name">The name of the header.</param>
+        /// <returns>The value of the header.</returns>
+        public string GetHeader(string name)
+        {
+            switch (name.ToLower())
+            {
+                case "plural-forms":
+                    return String.Format("nplurals={0}; plural={1};", NumPlurals, PluralForms.Source);
+                case "language":
+                    return Language;
+                default:
+                    return AdditionalHeaders[name];
+            }
+        }
+
+        /// <summary>
+        /// Gets all defined the headers.
+        /// </summary>
+        /// <returns>All defined the headers.</returns>
+        public Dictionary<string,string> GetHeaders()
+        {
+            return new Dictionary<string, string>() {
+                {"Plural-Forms", GetHeader("plural-forms")},
+                {"Language", Language},
+            }.Union(AdditionalHeaders).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         internal void UpdateMessage(Message message, string oldId, string oldContext)

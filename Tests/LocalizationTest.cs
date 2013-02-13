@@ -74,11 +74,9 @@ msgstr[1] ""{0} Benutzer""";
 
             // Test headers
             // ============
-            Assert.AreEqual(lo.Headers.Count, 2);
-            Assert.IsTrue(lo.Headers.ContainsKey("Plural-Forms"));
-            Assert.AreEqual(lo.Headers["Plural-Forms"], "nplurals=2; plural=(n!=1);");
-            Assert.IsTrue(lo.Headers.ContainsKey("Language"));
-            Assert.AreEqual(lo.Headers["Language"], "de_DE");
+            Assert.AreEqual(lo.NumPlurals, 2);
+            Assert.AreEqual(lo.PluralForms.ToString(), "(n!=1)");
+            Assert.AreEqual(lo.Language, "de_DE");
 
             Assert.AreEqual(lo.Count, 2);
             Assert.IsTrue(lo.Contains("Welcome, {0}!", "context"));
@@ -141,7 +139,8 @@ msgstr[1] ""{0} Benutzer""";
 
             lo.LoadFromString<POFormat>(TEST_PO);
 
-            Assert.AreEqual(lo.Headers.Count, 2);
+            Assert.AreEqual(lo.NumPlurals, 2);
+            Assert.AreEqual(lo.Language, "de_DE");
             Assert.AreEqual(lo.Count, 2);
         }
 
@@ -158,7 +157,8 @@ msgstr[1] ""{0} Benutzer""";
 
                 lo.LoadFromFile<POFormat>(fileName);
 
-                Assert.AreEqual(lo.Headers.Count, 2);
+                Assert.AreEqual(lo.NumPlurals, 2);
+                Assert.AreEqual(lo.Language, "de_DE");
                 Assert.AreEqual(lo.Count, 2);
             }
             finally
@@ -208,9 +208,10 @@ msgstr[1] ""{0} Benutzer""";
 
             lo.LoadFromFile<MOFormat>("locale/test.mo");
 
-            Assert.AreEqual(lo.Headers.Count, 11);
+            Assert.AreEqual(lo.NumPlurals, 2);
+            Assert.AreEqual(lo.Language, "de_DE");
+
             Assert.AreEqual(lo.Count, 4);
-            Assert.AreEqual(lo.Headers["Language"], "de_DE");
             Assert.AreEqual(lo.GetMessage("User", "context2").Context, "context2");
             Assert.AreEqual(lo.GetMessage("User", "context2").Id, "User");
             Assert.AreEqual(lo.GetMessage("User", "context2").Plural, "Users");
@@ -253,9 +254,10 @@ msgstr[1] ""{0} Benutzer""";
 
             lo.LoadFromString<JSONFormat>(TEST_JSON, true);
 
-            Assert.AreEqual(lo.Headers.Count, 2);
+            Assert.AreEqual(lo.NumPlurals, 2);
+            Assert.AreEqual(lo.Language, "de_DE");
+
             Assert.AreEqual(lo.Count, 2);
-            Assert.AreEqual(lo.Headers["Language"], "de_DE");
             Assert.IsTrue(lo.Contains("Welcome, {0}!", "context"));
             Assert.IsTrue(lo.Contains("One User"));
         }

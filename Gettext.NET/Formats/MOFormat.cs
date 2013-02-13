@@ -50,7 +50,7 @@ namespace GettextDotNet.Formats
                 uint pos = 28 + 16 * n;
 
                 // Format headers as message string
-                var headers = String.Join("\n", localization.Headers.Select(h => String.Format("{0}: {1}", h.Key, h.Value)));
+                var headers = String.Join("\n", localization.GetHeaders().Select(h => String.Format("{0}: {1}", h.Key, h.Value)));
 
                 // Write the original table entry for the header string (empty id)
                 writer.Write(0u);
@@ -192,7 +192,10 @@ namespace GettextDotNet.Formats
                     // Headers -> parse them
                     if (String.IsNullOrEmpty(orig))
                     {
-                        localization.Headers = trans.Trim().Split('\n').Select(s => s.Split(new[] { ':' }, 2)).ToDictionary(v => v[0].Trim(), v => v[1].Trim());
+                        foreach(var header in trans.Trim().Split('\n').Select(s => s.Split(new[] { ':' }, 2)))
+                        {
+                            localization.SetHeader(header[0].Trim(), header[1].Trim());
+                        }
                     }
                     else
                     {

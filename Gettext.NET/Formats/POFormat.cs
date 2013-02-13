@@ -35,7 +35,7 @@ namespace GettextDotNet.Formats
                 writer.Write("msgid \"\"\n");
                 writer.Write("msgstr \"\"\n");
                 writer.Write("\"");
-                writer.Write(String.Join("\\n\"\n\"", localization.Headers.Select(h => String.Format("{0}: {1}", h.Key, h.Value))));
+                writer.Write(String.Join("\\n\"\n\"", localization.GetHeaders().Select(h => String.Format("{0}: {1}", h.Key, h.Value))));
                 writer.Write("\"\n\n");
 
                 // Messages
@@ -110,7 +110,10 @@ namespace GettextDotNet.Formats
                             {
                                 if (translations.ContainsKey(0))
                                 {
-                                    localization.Headers = translations[0].Trim().Split('\n').Select(s => s.Split(new[] { ':' }, 2)).ToDictionary(v => v[0].Trim(), v => v[1].Trim());
+                                    foreach (var header in translations[0].Trim().Split('\n').Select(s => s.Split(new[] { ':' }, 2)))
+                                    {
+                                        localization.SetHeader(header[0].Trim(), header[1].Trim());
+                                    }
                                 }
                             }
                             else

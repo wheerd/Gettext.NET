@@ -37,7 +37,7 @@ namespace GettextDotNet.Formats
             {
                 writer.Write(@"{""Headers"":{");
 
-                writer.Write(String.Join(",", localization.Headers.Select(h => String.Format(@"{0}:{1}", Escape(h.Key), Escape(h.Value)))));
+                writer.Write(String.Join(",", localization.GetHeaders().Select(h => String.Format(@"{0}:{1}", Escape(h.Key), Escape(h.Value)))));
 
                 writer.Write(@"},""Messages"":{");
 
@@ -365,7 +365,7 @@ namespace GettextDotNet.Formats
                 offset++;
                 SkipWhitespace(reader);
                 var value = ReadString(reader);
-                localization.Headers.Add(key, value);
+                localization.SetHeader(key, value);
                 SkipWhitespace(reader);
                 if (reader.Peek() != ',')
                 {

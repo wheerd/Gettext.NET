@@ -236,6 +236,40 @@ msgstr[1] ""{0} Benutzer""";
         }
 
         [TestMethod]
+        public void TestSaveToResXFile()
+        {
+            var lo = new Localization();
+
+            var fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".resx";
+
+            lo.LoadFromFile<POFormat>("locale/test.po", true);
+            lo.SaveToFile<ResXFormat>(fileName);
+
+            Assert.IsTrue(FileEquals("locale/test.resx", fileName));
+
+            File.Delete(fileName);
+        }
+
+        [TestMethod]
+        public void TestLoadFromResXFile()
+        {
+            var lo = new Localization();
+
+            lo.LoadFromFile<ResXFormat>("locale/test.resx", true);
+
+            Assert.AreEqual(lo.NumPlurals, 2);
+            Assert.AreEqual(lo.Language, "de_DE");
+
+            Assert.AreEqual(lo.Count, 4);
+            Assert.AreEqual(lo.GetMessage("User", "context2").Context, "context2");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Id, "User");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Plural, "Users");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Translations.Length, 2);
+            Assert.AreEqual(lo.GetMessage("User", "context2").Translations[0], "Benutzer");
+            Assert.AreEqual(lo.GetMessage("User", "context2").Translations[1], "Benutzer");
+        }
+
+        [TestMethod]
         public void TestToJSONString()
         {
             var lo = new Localization();

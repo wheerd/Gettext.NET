@@ -60,7 +60,11 @@
       <Name>GettextDotNET</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="locale\test.resx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <None Include="locale\test.mo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

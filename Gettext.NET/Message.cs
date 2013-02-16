@@ -131,5 +131,22 @@ namespace GettextDotNet
             References = new List<string>();
             Flags = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
         }
+
+        /// <summary>
+        /// Sets the translation (nth plural).
+        /// </summary>
+        /// <param name="n">The number of the plural.</param>
+        /// <param name="translation">The translation.</param>
+        public void SetTranslation(int n, string translation)
+        {
+            if (Translations.Length <= n)
+            {
+                var t = new string[n+1];
+                Translations.CopyTo(t, 0);
+                Translations = t;
+            }
+            
+            Translations[n] = translation;
+        }
     }
 }

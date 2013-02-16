@@ -110,7 +110,9 @@ namespace GettextDotNet
         /// <returns>The message.</returns>
         public Message GetMessage(string id, string context = null)
         {
-            return Messages[GetKey(id, context)];
+            var key = GetKey(id, context);
+
+            return Messages.ContainsKey(key)? Messages[key] : null;
         }
 
         /// <summary>
@@ -212,7 +214,7 @@ namespace GettextDotNet
         {
             get
             {
-                return GetMessage(Id, Context);
+                return Messages[GetKey(Id, Context)];
             }
         }
 

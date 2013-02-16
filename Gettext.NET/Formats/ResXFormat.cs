@@ -10,23 +10,39 @@ using System.ComponentModel.Design;
 
 namespace GettextDotNet.Formats
 {
+    /// <summary>
+    /// Provides access to translated strings in .NET resource files and offers methods to read/write this format.
+    /// </summary>
     public class ResXFormat : ILocalizationFormat
     {
+        /// <summary>
+        /// Gets the file extensions supported by the resource format.
+        /// </summary>
+        /// <value>
+        /// The file extensions supported by this format.
+        /// </value>
         public string[] FileExtensions
         {
             get { return new string[] { ".resx" }; }
         }
 
+        /// <summary>
+        /// Dumps the specified localization to the stream in this format.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="writeComments">If set to <c>true</c>, comments will be included in the ouput.</param>
         public void Write(Localization localization, System.IO.Stream stream, bool writeComments = false)
         {
             using (var writer = new ResXResourceWriter(stream))
             {
                 foreach (var message in localization.GetMessages())
                 {
+                    //Context separated by \x04
                     var key = (String.IsNullOrEmpty(message.Context) ? "" : message.Context + "\x04") + message.Id;
 
+                    // Collect comments (separated by \x04)
                     var comments = new string[7];
-
                     comments[0] = message.Plural ?? "";
                     comments[1] = String.Join("\n", message.Comments);
                     comments[2] = String.Join("\n", message.TranslatorComments);
@@ -37,6 +53,7 @@ namespace GettextDotNet.Formats
 
                     for (int i = 0; i < message.Translations.Length; i++)
                     {
+                        // Add comments only to the singular
                         if (i != 0)
                         {
                             writer.AddResource(key + "\x03" + i, message.Translations[i]);
@@ -44,16 +61,14 @@ namespace GettextDotNet.Formats
                         else
                         {
                             var node = new ResXDataNode(key, message.Translations[i]);
-
                             node.Comment = String.Join("\x04", comments);
-
                             writer.AddResource(node);
                         }
                     }
                 }
 
+                // Write headers as metadata
                 writer.AddMetadata("IsGetTextFormat", "true");
-
                 foreach (var header in localization.GetHeaders())
                 {
                     writer.AddMetadata(header.Key, header.Value);
@@ -61,145 +76,158 @@ namespace GettextDotNet.Formats
             }
         }
 
+        /// <summary>
+        /// Attempts to read messages and headers from the stream in the specified format.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="loadComments">If set to <c>true</c>, comments will be loaded from the stream.</param>
+        /// <exception cref="System.ArgumentException">
+        /// Invalid format inside the .resx file
+        /// </exception>
         public void Read(Localization localization, System.IO.Stream stream, bool loadComments = false)
         {
             ITypeResolutionService t = null;
 
+            // Load headers from metadata
+            var metareader = new ResXResourceReader(stream);
+            IDictionaryEnumerator dict = metareader.GetMetadataEnumerator();
+
+            var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            while (dict.MoveNext())
             {
-                var metareader = new ResXResourceReader(stream);
-                IDictionaryEnumerator dict = metareader.GetMetadataEnumerator();
+                var key = dict.Key as string;
+                var value = dict.Value as string;
 
-                var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-                while(dict.MoveNext())
+                if (key != null && value != null)
                 {
-                    var key = dict.Key as string;
-                    var value = dict.Value as string;
-
-                    if (key != null && value != null)
-                    {
-                        headers.Add(key, value);
-                    }
+                    headers.Add(key, value);
                 }
+            }
 
-                stream.Seek(0, System.IO.SeekOrigin.Begin);
-                var reader = new ResXResourceReader(stream);
+            // Start from the beginning again, this time read data including comments
+            stream.Seek(0, System.IO.SeekOrigin.Begin);
+            var reader = new ResXResourceReader(stream);
+            reader.UseResXDataNodes = true;
 
-                reader.UseResXDataNodes = true;
-                bool isGetTextFormat = headers.ContainsKey("IsGetTextFormat") && headers["IsGetTextFormat"].Equals("true", StringComparison.OrdinalIgnoreCase);
+            bool isGetTextFormat = headers.ContainsKey("IsGetTextFormat") && headers["IsGetTextFormat"].Equals("true", StringComparison.OrdinalIgnoreCase);
+            
+            // Set headers if it is a resource file generated by this lib (so the headers are actually useful)
+            if (isGetTextFormat)
+            {
+                foreach (var header in headers)
+                {
+                    localization.SetHeader(header.Key, header.Value);
+                }
+            }
 
-                dict = reader.GetEnumerator();
+            dict = reader.GetEnumerator();
+            while (dict.MoveNext())
+            {
+                var key = dict.Key as string;
+                var node = dict.Value as ResXDataNode;
+                var value = node.GetValue(t) as string;
+
+                // Since the resource cannot distinguish between data and metadata nodes when reading comments,
+                // skip nodes with the same values as the headers
+                if (headers.ContainsKey(key) && headers[key] == value)
+                {
+                    continue;
+                }
 
                 if (isGetTextFormat)
                 {
-                    foreach (var header in headers)
+                    string context = null;
+                    string id = "";
+                    int number = 0;
+
+
+                    // Split into context and id
+                    var key2 = key.Split('\x04');
+                    if (key2.Length == 1)
                     {
-                        localization.SetHeader(header.Key, header.Value);
+                        id = key2[0];
                     }
-                }
-
-                while(dict.MoveNext())
-                {
-                    var key = dict.Key as string;
-                    var node = dict.Value as ResXDataNode;
-                    var value = node.GetValue(t) as string;
-
-                    if (headers.ContainsKey(key) && headers[key] == value)
+                    else if (key2.Length == 2)
                     {
-                        continue;
+                        context = key2[0];
+                        id = key2[1];
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid format inside the .resx file");
                     }
 
-                    if (isGetTextFormat)
+                    // Extract the number the plural translation if present (separated by 0x03)
+                    if (id.Contains('\x03'))
                     {
-                        string context = null;
-                        string id = "";
-                        int number = 0;
+                        var tmp = id.Split('\x03');
 
-                        var key2 = key.Split('\x04');
-
-                        if (key2.Length == 1)
-                        {
-                            id = key2[0];
-                        }
-                        else if (key2.Length == 2)
-                        {
-                            context = key2[0];
-                            id = key2[1];
-                        }
-                        else
+                        if (tmp.Length != 2)
                         {
                             throw new ArgumentException("Invalid format inside the .resx file");
                         }
 
-                        if (id.Contains('\x03'))
+                        id = tmp[0];
+                        number = int.Parse(tmp[1]);
+                    }
+
+                    // Message information is split up into multiple nodes in the .resx format,
+                    // so load any previous message with the same id to add the information
+                    var message = localization.GetMessage(id, context);
+
+                    if (number == 0)
+                    {
+                        var comments = node.Comment.Split('\x04');
+                        if (comments.Length != 7)
                         {
-                            var tmp = id.Split('\x03');
-
-                            if (tmp.Length != 2)
-                            {
-                                throw new ArgumentException("Invalid format inside the .resx file");
-                            }
-
-                            id = tmp[0];
-                            number = int.Parse(tmp[1]);
+                            throw new ArgumentException("Invalid format inside the .resx file");
                         }
 
-                        var message = localization.GetMessage(id, context);
-
-                        if (number == 0 && loadComments)
-                        {
-                            var comments = node.Comment.Split('\x04');
-
-                            if (comments.Length != 7)
-                            {
-                                throw new ArgumentException("Invalid format inside the .resx file");
-                            }
-
-                            if (message == null)
-                            {
-                                message = new Message()
-                                {
-                                    Id = id,
-                                    Context = context,
-                                    Plural = comments[0],
-                                    Comments = comments[1].Split('\n').ToList(),
-                                    TranslatorComments = comments[2].Split('\n').ToList(),
-                                    References = comments[3].Split('\n').ToList(),
-                                    Flags = new HashSet<string>(comments[4].Split('\n')),
-                                    PreviousId = comments[5],
-                                    PreviousContext = comments[6]
-                                };
-
-                                localization.Add(message);
-                            }
-                            else
-                            {
-                                message.Plural = comments[0];
-                                message.Comments = comments[1].Split('\n').ToList();
-                                message.TranslatorComments = comments[2].Split('\n').ToList();
-                                message.References = comments[3].Split('\n').ToList();
-                                message.Flags = new HashSet<string>(comments[4].Split('\n'));
-                                message.PreviousId = comments[5];
-                                message.PreviousContext = comments[6];
-                            }
-                        }
-                        else if (message == null)
+                        if (message == null)
                         {
                             message = new Message()
                             {
-                                Id = id,
-                                Context = context
+                                Id                  = id,
+                                Context             = context,
+                                Plural              = comments[0],
+                                Comments            = comments[1].Split('\n').ToList(),
+                                TranslatorComments  = comments[2].Split('\n').ToList(),
+                                References          = comments[3].Split('\n').ToList(),
+                                Flags               = new HashSet<string>(comments[4].Split('\n')),
+                                PreviousId          = comments[5],
+                                PreviousContext     = comments[6]
                             };
 
                             localization.Add(message);
                         }
-
-                        message.SetTranslation(number, value);
+                        else
+                        {
+                            message.Plural              = comments[0];
+                            message.Comments            = comments[1].Split('\n').ToList();
+                            message.TranslatorComments  = comments[2].Split('\n').ToList();
+                            message.References          = comments[3].Split('\n').ToList();
+                            message.Flags               = new HashSet<string>(comments[4].Split('\n'));
+                            message.PreviousId          = comments[5];
+                            message.PreviousContext     = comments[6];
+                        }
                     }
-                    else
+                    else if (message == null)
                     {
-                        localization.Add(new Message { Id = key, Translations = new string[] { value } });
+                        message = new Message()
+                        {
+                            Id = id,
+                            Context = context
+                        };
+
+                        localization.Add(message);
                     }
+
+                    message.SetTranslation(number, value);
+                }
+                else
+                {
+                    localization.Add(new Message { Id = key, Translations = new string[] { value } });
                 }
 
                 metareader.Close();

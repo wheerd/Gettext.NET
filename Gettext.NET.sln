@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettextDotNET.Tests", "Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetextDotNet.Tools", "GetextDotNet.Tools\GetextDotNet.Tools.csproj", "{54465166-FF77-4712-B964-CA53F0DAE443}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettextDotNet.MessageExtractor", "GettextDotNet.MessageExtractor\GettextDotNet.MessageExtractor.csproj", "{E224E0A9-04B1-4378-BE21-DEBA0384446D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMvcApplication", "SampleMvcApplication\SampleMvcApplication.csproj", "{9528A6D2-E355-4D77-87A2-34488F44450D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{54465166-FF77-4712-B964-CA53F0DAE443}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54465166-FF77-4712-B964-CA53F0DAE443}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54465166-FF77-4712-B964-CA53F0DAE443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E224E0A9-04B1-4378-BE21-DEBA0384446D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E224E0A9-04B1-4378-BE21-DEBA0384446D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E224E0A9-04B1-4378-BE21-DEBA0384446D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E224E0A9-04B1-4378-BE21-DEBA0384446D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9528A6D2-E355-4D77-87A2-34488F44450D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9528A6D2-E355-4D77-87A2-34488F44450D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9528A6D2-E355-4D77-87A2-34488F44450D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9528A6D2-E355-4D77-87A2-34488F44450D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

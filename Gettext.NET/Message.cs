@@ -24,7 +24,7 @@ namespace GettextDotNet
             get { return _id; }
             set {
                 var oldId = _id;
-                _id = value;
+                _id = value ?? "";
                 if (loc != null)
                 {
                     loc.UpdateMessage(this, oldId, _context);

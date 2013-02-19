@@ -7,3 +7,11 @@
 /GetextDotNet.Tools/bin
 /GetextDotNet.Tools/obj
 /GetextDotNet.Tools/GetextDotNet.Tools.csproj.user
+
+/GettextDotNet.MessageExtractor/GettextDotNet.MessageExtractor.csproj.user
+/GettextDotNet.MessageExtractor/bin
+/GettextDotNet.MessageExtractor/obj
+/SampleMvcApplication/obj
+/SampleMvcApplication/bin
+/SampleMvcApplication/SampleMvcApplication.csproj.user
+/packages

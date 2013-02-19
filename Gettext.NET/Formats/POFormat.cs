@@ -357,10 +357,10 @@ namespace GettextDotNet.Formats
                 builder.Append(String.Format("msgid_plural \"{0}\"\n", msg.Plural.Replace("\n", "\\n\"\n\"")));
             }
 
-            if (msg.Translations.Length > 1)
+            if (!String.IsNullOrEmpty(msg.Plural) && msg.loc.NumPlurals > 1)
             {
                 int i = 0;
-                foreach (var Translation in msg.Translations)
+                foreach (var Translation in msg.Translations.Concat(Enumerable.Repeat("", msg.loc.NumPlurals - msg.Translations.Length)))
                 {
                     builder.Append(String.Format("msgstr[{0}] \"{1}\"\n", i++, Translation.Replace("\n", "\\n\"\n\"")));
                 }

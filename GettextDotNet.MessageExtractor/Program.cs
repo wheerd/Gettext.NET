@@ -16,64 +16,41 @@ namespace GettextDotNet.MessageExtractor
     {
         static void Main(string[] args)
         {
+            Localization localization;
+            List<string> files;
+            List<LocalizationMethod> methods = new List<LocalizationMethod>();
             HashSet<string> projects = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
             string solution_path = null;
-            List<LocalizationMethod> methods = new List<LocalizationMethod>();
             bool show_help = false;
+            bool show_location = true;
+            bool extract_comments = false;
+            string comment_prefix = null;
+            string output_file = null;
+            var base_path = "";
 
-            var p = new OptionSet() {
-                { "p|project=", "add a project to extract messages from",
+            var options = new OptionSet() {
+                { "p|project=", "add a {PROJECT} to extract messages from",
                    v => projects.Add (v) },
                 { "s|solution=", 
-                   "path the solution file to extract messages from",
+                   "path the solution {FILE} to extract messages from",
                     (string v) => solution_path = v },
-                { "k=", "add a keyword to be recognized as a translation method",
+                { "o|output=", 
+                   "the output .po {FILE}. If empty the generated .po file is printed to the console.",
+                    (string v) => output_file = v },
+                { "k=", "add a {KEYWORD} to be recognized as a translation method",
                    v => methods.Add(ParseKeyword(v)) },
+                { "c|add-comments:",  "extract comments (if set only the ones which start with the given {PREFIX})", 
+                   v => {comment_prefix = v; extract_comments = true; } },
+                { "no-location",  "omit file references for messages", 
+                   v => show_location = v != null },
                 { "h|help",  "show this message and exit", 
                    v => show_help = v != null },
-            };
+            };            
 
-            List<string> extra;
+            // Parse options
             try
             {
-                extra = p.Parse(args);
-
-                if (!show_help && solution_path != null)
-                {
-                    var solution = Solution.Load(Path.GetFullPath(solution_path));
-                    var filtered_projects = solution.Projects;
-                    if (projects.Count > 0)
-                    {
-                        filtered_projects = filtered_projects.Where(pr => projects.Contains(pr.Name));
-                    }
-
-                    if (methods.Count == 0)
-                    {
-                        methods.AddRange(MethodCallCollector.DefaultMethods);
-                    }
-
-                    var localization = ExtractMessages(filtered_projects, methods);
-
-                    Stream stream;
-
-                    if (extra.Any())
-                    {
-                        stream = File.OpenRead(extra[0]);
-                    }
-                    else
-                    {
-                        stream = Console.OpenStandardOutput();
-                    }
-
-                    new POFormat().Write(localization, stream, true);
-
-                    stream.Close();
-                }
-                else
-                {
-                    Console.Write("MessageExtractor: ");
-                    p.WriteOptionDescriptions(Console.Out);
-                }
+                files = options.Parse(args);
             }
             catch (OptionException e)
             {
@@ -82,26 +59,133 @@ namespace GettextDotNet.MessageExtractor
                 Console.WriteLine("Try `MessageExtractor --help' for more information.");
                 return;
             }
-        }
 
-        public static Localization ExtractMessages(IEnumerable<IProject> projects, List<LocalizationMethod> methods)
-        {
-            var localization = new Localization();
+            if (methods.Count == 0)
+            {
+                methods.AddRange(MethodCallCollector.DefaultMethods);
+            }
+
             var collector = new MethodCallCollector(methods);
 
-            foreach(var project in projects)
+            // Use files from solution/projects
+            if (!show_help && solution_path != null)
             {
-                foreach (var document in project.Documents)
+                var solution = Solution.Load(Path.GetFullPath(solution_path));
+                var filtered_projects = solution.Projects;
+                if (projects.Count > 0)
                 {
-                    var root = (CompilationUnitSyntax)document.GetSyntaxRoot();
+                    filtered_projects = filtered_projects.Where(pr => projects.Contains(pr.Name));
+                }
+
+                foreach (var project in filtered_projects)
+                {
+                    foreach (var document in project.Documents)
+                    {
+                        var root = (CompilationUnitSyntax)document.GetSyntaxRoot();
+
+                        collector.Visit(root);
+                    }
+                }
+
+                base_path = Path.GetDirectoryName(solution.FilePath);
+            }
+            // Use the files passed as arguments
+            else if (!show_help && files.Any())
+            {
+                files = files.Select(f => Path.GetFullPath(f)).ToList();
+
+                foreach (var file in files)
+                {
+                    var root = (CompilationUnitSyntax)SyntaxTree.ParseFile(file).GetRoot();
 
                     collector.Visit(root);
+                } 
+                
+                // Find common base path of the files
+                var common_paths =
+                        from len in Enumerable.Range(0, files.Min(s => s.Length)).Reverse()
+                        let possibleMatch = files.First().Substring(0, len)
+                        where files.All(f => f.StartsWith(possibleMatch))
+                        select possibleMatch;
+
+                base_path = Path.GetDirectoryName(common_paths.First());
+            }
+            // Show help message
+            else
+            {
+                Console.WriteLine("MessageExtractor [options] [file1] [file2] ...");
+                Console.WriteLine("");
+                Console.WriteLine("Options: ");
+                options.WriteOptionDescriptions(Console.Out);
+                return;
+            }
+
+            // Extract all messages
+            localization = ExtractMessages(collector);
+
+            // Remove extracted comments if -c is not set
+            if (!extract_comments)
+            {
+                foreach (var message in localization.GetMessages())
+                {
+                    message.Comments.Clear();
+                }
+            }
+            // Remove comments which do not start with the specified prefix
+            else if (!String.IsNullOrEmpty(comment_prefix))
+            {
+                var length = comment_prefix.Length;
+                foreach (var message in localization.GetMessages())
+                {
+                    message.Comments = (from comment in message.Comments
+                                        where comment.StartsWith(comment_prefix)
+                                        select comment.Substring(length).Trim()).ToList();
                 }
             }
 
+            // Remove extracted references if they should be excluded
+            if (!show_location)
+            {
+                foreach (var message in localization.GetMessages())
+                {
+                    message.References.Clear();
+                }
+            }
+            // Remove common base from the beginning of each reference
+            else
+            {
+                var base_length = base_path.Length + 1;
+                foreach (var message in localization.GetMessages())
+                {
+                    message.References = message.References.Select(r => r.StartsWith(base_path) ? r.Substring(base_length) : r).ToList();
+                }
+                    
+            }
+
+            Stream stream;
+            if (!String.IsNullOrEmpty(output_file))
+            {
+                stream = File.OpenRead(output_file);
+            }
+            else
+            {
+                stream = Console.OpenStandardOutput();
+            }
+
+            // Write to .po file
+            // TODO: Support for other formats
+            new POFormat().Write(localization, stream, true);
+
+            stream.Close();
+        }
+
+        private static Localization ExtractMessages(MethodCallCollector collector)
+        {
+            var localization = new Localization();
+
             foreach (var occurence in collector.Occurences)
             {
-                foreach( var method in collector.MethodMapping[occurence.Item1])
+                foreach (var method in collector.MethodMapping[occurence.Item1])
                 {
                     ParseMessage(localization, method, occurence.Item2);
                 }
@@ -116,26 +200,63 @@ namespace GettextDotNet.MessageExtractor
             {
                 var expr = args.Arguments[(int)n].Expression;
 
-                if (expr is LiteralExpressionSyntax)
-                {
-                    var token = ((LiteralExpressionSyntax)expr).Token;
-
-                    if (token.Kind == SyntaxKind.StringLiteralToken)
-                    {
-                        return token.Value as string;
-                    }
-                }
+                return GetString(expr);
             }
 
             return null;
         }
 
-        public static void ParseMessage(Localization localization, LocalizationMethod method, SyntaxReference reference)
+        private static string GetString(SyntaxNode expr)
+        {
+            if (expr is LiteralExpressionSyntax)
+            {
+                var token = ((LiteralExpressionSyntax)expr).Token;
+
+                /*
+                // Only parse string literals
+                if (token.Kind == SyntaxKind.StringLiteralToken)
+                {
+                    return token.Value as string;
+                }
+                */
+
+                return token.ValueText;
+            }
+            else if (expr is BinaryExpressionSyntax)
+            {
+                if (expr.Kind == SyntaxKind.AddExpression)
+                {
+                    var left = GetString(((BinaryExpressionSyntax)expr).Left);
+                    var right = GetString(((BinaryExpressionSyntax)expr).Right);
+
+                    if (left != null && right != null)
+                    {
+                        return left + right;
+                    }
+                }
+            }
+            else if (expr is ParenthesizedExpressionSyntax)
+            {
+                return GetString(((ParenthesizedExpressionSyntax)expr).Expression);
+            }
+
+            return null;
+        }
+
+        private static void ParseMessage(Localization localization, LocalizationMethod method, SyntaxReference reference)
         {
             var node = reference.GetSyntax() as InvocationExpressionSyntax;
-            var line = node.SyntaxTree.GetLineSpan(node.FullSpan, false).StartLinePosition.Line;
+
+            // For some weird reason lines are zero-based
+            var line = node.SyntaxTree.GetLineSpan(node.Span, false).StartLinePosition.Line + 1;
             var fname = node.SyntaxTree.FilePath;
             var refr = fname + ":" + line;
+
+            var expression = node.Ancestors().First(p => p.Parent is BlockSyntax);
+            var comments = (from trivia in expression.GetLeadingTrivia()
+                            where trivia.Kind == SyntaxKind.SingleLineCommentTrivia
+                                || trivia.Kind == SyntaxKind.DocumentationCommentTrivia
+                            select trivia.ToFullString().Substring(2).Trim()).ToList();
 
             var id = GetStringArg(node.ArgumentList, method.IdArg);
             var context = GetStringArg(node.ArgumentList, method.ContextArg);
@@ -149,6 +270,7 @@ namespace GettextDotNet.MessageExtractor
                 {
                     message.References.Add(refr);
                     message.Plural = message.Plural ?? plural;
+                    message.Comments.AddRange(comments);
                 }
                 else
                 {
@@ -156,6 +278,7 @@ namespace GettextDotNet.MessageExtractor
                     {
                         Id = id,
                         Context = context,
+                        Comments = comments,
                         Plural = plural
                     };
                     message.References.Add(refr);
@@ -166,7 +289,7 @@ namespace GettextDotNet.MessageExtractor
             }
         }
 
-        public static LocalizationMethod ParseKeyword(string kw)
+        private static LocalizationMethod ParseKeyword(string kw)
         {
             var name = "";
             var idArg = 0;
@@ -186,7 +309,7 @@ namespace GettextDotNet.MessageExtractor
 
                 int i = 0;
 
-                foreach(var spec in specs)
+                foreach (var spec in specs)
                 {
                     if (spec.EndsWith("c"))
                     {
@@ -260,13 +383,13 @@ namespace GettextDotNet.MessageExtractor
 
         public readonly Dictionary<string, List<LocalizationMethod>> MethodMapping;
 
+        public List<Tuple<string, SyntaxReference>> Occurences = new List<Tuple<string, SyntaxReference>>();
+
         public MethodCallCollector(IEnumerable<LocalizationMethod> methods)
         {
             Methods = methods;
             MethodMapping = Methods.Select(m => m.MethodName).Distinct().ToDictionary(m => m, m => Methods.Where(m2 => m2.MethodName.Equals(m)).ToList());
         }
-
-        public List<Tuple<string, SyntaxReference>> Occurences = new List<Tuple<string, SyntaxReference>>();
 
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
@@ -279,7 +402,7 @@ namespace GettextDotNet.MessageExtractor
                     Occurences.Add(Tuple.Create(name, node.GetReference()));
                 }
             }
-            else  if (node.Expression is IdentifierNameSyntax)
+            else if (node.Expression is IdentifierNameSyntax)
             {
                 var name = ((IdentifierNameSyntax)node.Expression).Identifier.ToString();
 
@@ -287,7 +410,6 @@ namespace GettextDotNet.MessageExtractor
                 {
                     Occurences.Add(Tuple.Create(name, node.GetReference()));
                 }
-
             }
         }
     }

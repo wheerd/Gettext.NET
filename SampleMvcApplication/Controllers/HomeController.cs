@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +11,9 @@ namespace SampleMvcApplication.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = _("Modify this template to jump-start your ASP.NET MVC application.");
+            // Test!
+            ViewBag.Message = _("Modify this template to jump-start your ASP.NET MVC application."); // Test 2?
+            // Not extracted
 
             return View();
         }
@@ -20,7 +22,8 @@ namespace SampleMvcApplication.Controllers
         {
             ViewBag.Message = _("Your app description page.");
 
-            var test = _("a" + "b");
+            // Test...
+            var test = _("a" + false + "b" + ("c" + "d") + 5);
             test = _n("Singular", "Plural");
             test = _c("Context", "Message");
 
@@ -29,6 +32,8 @@ namespace SampleMvcApplication.Controllers
 
         public ActionResult Contact()
         {
+            // Test 3
+            _("Your app description page.");
             ViewBag.Message = _("Your contact page.");
 
             return View();

@@ -1,14 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GettextDotNet.Formats;
+using Microsoft.CSharp;
+using NDesk.Options;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
-using NDesk.Options;
-using Roslyn.Compilers.Common;
+using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
-using GettextDotNet.Formats;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.Razor;
+using System.Xml.Linq;
 
 namespace GettextDotNet.MessageExtractor
 {
@@ -79,6 +81,50 @@ namespace GettextDotNet.MessageExtractor
 
                 foreach (var project in filtered_projects)
                 {
+                    var project_file = XDocument.Load(project.FilePath);
+                    var ns = project_file.Root.GetDefaultNamespace();
+
+                    var view_files = project_file.Descendants(ns + "Content").Select(c => c.Attribute("Include").Value).Where(i => i.EndsWith(".cshtml"));
+                    
+                    var project_base_path = Path.GetDirectoryName(project.FilePath);
+                    // var host = WebRazorHostFactory.CreateHostFromConfig("/");
+
+
+                    RazorEngineHost host = new RazorEngineHost(new CSharpRazorCodeLanguage());
+                    host.DefaultClassName = "TestClass";
+                    host.DefaultNamespace = "TestNamespace";
+
+                    var engine = new RazorTemplateEngine(host);
+
+                    foreach (var view in view_files)
+                    {
+                        // Parse the file using the razor engine
+                        GeneratorResults results = null;
+                        using (var fstream = File.OpenRead(Path.Combine(project_base_path, view)))
+                        {
+                            using (TextReader reader = new StreamReader(fstream))
+                            {
+                                results = engine.GenerateCode(reader, className: null, rootNamespace: null, sourceFileName: Path.Combine(project_base_path, view));
+                            }
+                        }
+
+                        if (results.Success)
+                        {
+                            // Use CodeDom to generate source code from the CodeCompileUnit
+                            var codeDomProvider = new CSharpCodeProvider();
+                            var srcFileWriter = new StringWriter();
+                            codeDomProvider.GenerateCodeFromCompileUnit(results.GeneratedCode, srcFileWriter, new CodeGeneratorOptions());
+
+                            var code = srcFileWriter.ToString();
+
+                            SyntaxTree syntaxTree = SyntaxTree.ParseText(code, view);
+
+                            var root = (CompilationUnitSyntax)syntaxTree.GetRoot();
+
+                            collector.Visit(root);
+                        }
+                    }
+
                     foreach (var document in project.Documents)
                     {
                         var root = (CompilationUnitSyntax)document.GetSyntaxRoot();
@@ -165,7 +211,7 @@ namespace GettextDotNet.MessageExtractor
             Stream stream;
             if (!String.IsNullOrEmpty(output_file))
             {
-                stream = File.OpenRead(output_file);
+                stream = File.Create(output_file);
             }
             else
             {
@@ -250,6 +296,18 @@ namespace GettextDotNet.MessageExtractor
             // For some weird reason lines are zero-based
             var line = node.SyntaxTree.GetLineSpan(node.Span, false).StartLinePosition.Line + 1;
             var fname = node.SyntaxTree.FilePath;
+
+            // Correct line numbers for view (.cshtml) files using the #line directive
+            var parent = node.Ancestors().First(p => p.Parent is BlockSyntax);
+            var line_trivia = parent.GetLeadingTrivia().FirstOrDefault(t => t.Kind == SyntaxKind.LineDirectiveTrivia);
+            if (line_trivia != null && line_trivia.Kind != SyntaxKind.None)
+            {
+                var info = line_trivia.ToString().Substring(line_trivia.ToString().IndexOf("#line") + 5).TrimStart();
+                var parts = info.Split(new char[] { ' ', '\t', '\r', '\n' }).Where(p => !String.IsNullOrEmpty(p)).ToArray();
+
+                line = int.Parse(parts[0]);
+            }
+
             var refr = fname + ":" + line;
 
             var expression = node.Ancestors().First(p => p.Parent is BlockSyntax);
@@ -347,9 +405,7 @@ namespace GettextDotNet.MessageExtractor
 
             return new LocalizationMethod
                 {
-                    Namespace = ns,
-                    TypeName = typename,
-                    MethodName = method,
+                    Name = method,
                     IdArg = idArg,
                     PluralArg = pluralArg,
                     ContextArg = contextArg
@@ -359,9 +415,7 @@ namespace GettextDotNet.MessageExtractor
 
     internal class LocalizationMethod
     {
-        public string Namespace { get; set; }
-        public string TypeName { get; set; }
-        public string MethodName { get; set; }
+        public string Name { get; set; }
         public int IdArg { get; set; }
         public int? PluralArg { get; set; }
         public int? ContextArg { get; set; }
@@ -372,9 +426,7 @@ namespace GettextDotNet.MessageExtractor
         public static readonly LocalizationMethod[] DefaultMethods = new LocalizationMethod[] {
             new LocalizationMethod
             {
-                Namespace = "GettextDotNet",
-                TypeName = "Internationalization",
-                MethodName = "_",
+                Name = "_",
                 IdArg = 0
             }
         };
@@ -383,34 +435,44 @@ namespace GettextDotNet.MessageExtractor
 
         public readonly Dictionary<string, List<LocalizationMethod>> MethodMapping;
 
-        public List<Tuple<string, SyntaxReference>> Occurences = new List<Tuple<string, SyntaxReference>>();
+        public readonly List<Tuple<string, SyntaxReference>> Occurences = new List<Tuple<string, SyntaxReference>>();
 
         public MethodCallCollector(IEnumerable<LocalizationMethod> methods)
         {
             Methods = methods;
-            MethodMapping = Methods.Select(m => m.MethodName).Distinct().ToDictionary(m => m, m => Methods.Where(m2 => m2.MethodName.Equals(m)).ToList());
+            MethodMapping = Methods.Select(m => m.Name).Distinct().ToDictionary(m => "\\b" + m + "$", m => Methods.Where(m2 => m2.Name.Equals(m)).ToList());
         }
 
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             if (node.Expression is MemberAccessExpressionSyntax)
             {
-                var name = ((MemberAccessExpressionSyntax)node.Expression).Name.ToString();
+                // var name = ((MemberAccessExpressionSyntax)node.Expression).Name.ToString();
+                var name = node.Expression.ToString();
+                var key = MethodMapping.Keys.FirstOrDefault(
+                    m => Regex.IsMatch(name, m)
+                );
 
-                if (MethodMapping.ContainsKey(name))
+                if (key != null)
                 {
-                    Occurences.Add(Tuple.Create(name, node.GetReference()));
+                    Occurences.Add(Tuple.Create(key, node.GetReference()));
                 }
             }
             else if (node.Expression is IdentifierNameSyntax)
             {
                 var name = ((IdentifierNameSyntax)node.Expression).Identifier.ToString();
 
-                if (MethodMapping.ContainsKey(name))
+                var key = MethodMapping.Keys.FirstOrDefault(
+                    m => Regex.IsMatch(name, m)
+                );
+
+                if (key != null)
                 {
-                    Occurences.Add(Tuple.Create(name, node.GetReference()));
+                    Occurences.Add(Tuple.Create(key, node.GetReference()));
                 }
             }
+
+            base.VisitInvocationExpression(node);
         }
     }
 }

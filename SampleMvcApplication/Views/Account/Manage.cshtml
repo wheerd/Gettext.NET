@@ -1,15 +1,15 @@
 ﻿@model SampleMvcApplication.Models.LocalPasswordModel
 @{
-    ViewBag.Title = "Manage Account";
+    ViewBag.Title = @_("Manage Account");
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
+    <h1>@ViewBag.Title</h1>
 </hgroup>
 
 <p class="message-success">@ViewBag.StatusMessage</p>
 
-<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
+<p>@_("You're logged in as <strong>{0}</strong>.", User.Identity.Name)</p>
 
 @if (ViewBag.HasLocalPassword)
 {
@@ -23,7 +23,7 @@ else
 <section id="externalLogins">
     @Html.Action("RemoveExternalLogins")
 
-    <h3>Add an external login</h3>
+    <h3>@_("Add an external login")</h3>
     @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
 </section>
 

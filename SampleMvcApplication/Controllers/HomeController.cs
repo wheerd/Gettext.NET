@@ -22,18 +22,11 @@ namespace SampleMvcApplication.Controllers
         {
             ViewBag.Message = _("Your app description page.");
 
-            // Test...
-            var test = _("a" + false + "b" + ("c" + "d") + 5);
-            test = _n("Singular", "Plural");
-            test = _c("Context", "Message");
-
             return View();
         }
 
         public ActionResult Contact()
         {
-            // Test 3
-            _("Your app description page.");
             ViewBag.Message = _("Your contact page.");
 
             return View();

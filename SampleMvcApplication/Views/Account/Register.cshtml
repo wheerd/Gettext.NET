@@ -1,11 +1,11 @@
 ﻿@model SampleMvcApplication.Models.RegisterModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = _("Register");
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
+    <h1>@ViewBag.Title</h1>
+    <h2>@_("Create a new account.")</h2>
 </hgroup>
 
 @using (Html.BeginForm()) {
@@ -13,7 +13,7 @@
     @Html.ValidationSummary()
 
     <fieldset>
-        <legend>Registration Form</legend>
+        <legend>@_("Registration Form")</legend>
         <ol>
             <li>
                 @Html.LabelFor(m => m.UserName)
@@ -28,7 +28,7 @@
                 @Html.PasswordFor(m => m.ConfirmPassword)
             </li>
         </ol>
-        <input type="submit" value="Register" />
+        <input type="submit" value="@_("Register")" />
     </fieldset>
 }
 

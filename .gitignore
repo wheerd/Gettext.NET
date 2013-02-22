@@ -15,3 +15,7 @@
 /SampleMvcApplication/bin
 /SampleMvcApplication/SampleMvcApplication.csproj.user
 /packages
+
+/SampleMvcApplication/App_Data/database.ldf
+/SampleMvcApplication/App_Data/database.mdf
+/SampleMvcApplication/App_Data/database_log.ldf

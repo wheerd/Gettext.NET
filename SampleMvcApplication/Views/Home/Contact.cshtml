@@ -1,50 +1,50 @@
 ﻿@{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = _("Contact");
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
+    <h1>@ViewBag.Title</h1>
     <h2>@ViewBag.Message</h2>
 </hgroup>
 
 <section class="contact">
     <header>
-        <h3>Phone</h3>
+        <h3>@_("Phone")</h3>
     </header>
     <p>
-        <span class="label">Main:</span>
-        <span>425.555.0100</span>
+        <span class="label">@_("Main:")</span>
+        <span>@_("425.555.0100")</span>
     </p>
     <p>
-        <span class="label">After Hours:</span>
-        <span>425.555.0199</span>
+        <span class="label">@_("After Hours:")</span>
+        <span>@_("425.555.0199")</span>
     </p>
 </section>
 
 <section class="contact">
     <header>
-        <h3>Email</h3>
+        <h3>@_("Email")</h3>
     </header>
     <p>
-        <span class="label">Support:</span>
-        <span><a href="mailto:Support@example.com">Support@example.com</a></span>
+        <span class="label">@_("Support:")</span>
+        <span>@_("<a href=\"mailto:Support@example.com\">Support@example.com</a>")</span>
     </p>
     <p>
-        <span class="label">Marketing:</span>
-        <span><a href="mailto:Marketing@example.com">Marketing@example.com</a></span>
+        <span class="label">@_("Marketing:")</span>
+        <span>@_("<a href=\"mailto:Marketing@example.com\">Marketing@example.com</a>")</span>
     </p>
     <p>
-        <span class="label">General:</span>
-        <span><a href="mailto:General@example.com">General@example.com</a></span>
+        <span class="label">@_("General:")</span>
+        <span>@_("<a href=\"mailto:General@example.com\">General@example.com</a>")</span>
     </p>
 </section>
 
 <section class="contact">
     <header>
-        <h3>Address</h3>
+        <h3>@_("Address")</h3>
     </header>
     <p>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399
+        @_("One Microsoft Way<br />"+
+           "Redmond, WA 98052-6399")
     </p>
 </section>

@@ -76,6 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KeywordExtractor.cs" />
+    <Compile Include="LocalizationKeyword.cs" />
     <Compile Include="Program.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>

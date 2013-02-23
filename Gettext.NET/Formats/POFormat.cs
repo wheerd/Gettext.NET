@@ -35,7 +35,7 @@ namespace GettextDotNet.Formats
                 writer.Write("msgid \"\"\n");
                 writer.Write("msgstr \"\"\n");
                 writer.Write("\"");
-                writer.Write(String.Join("\\n\"\n\"", localization.GetHeaders().Select(h => String.Format("{0}: {1}", h.Key, h.Value))));
+                writer.Write(String.Join("\\n\"\n\"", localization.GetHeaders().Select(h => String.Format("{0}: {1}", EscapeString(h.Key, false), EscapeString(h.Value, false)))));
                 writer.Write("\"\n\n");
 
                 // Messages
@@ -336,25 +336,25 @@ namespace GettextDotNet.Formats
 
                 if (!String.IsNullOrEmpty(msg.PreviousContext))
                 {
-                    builder.Append(String.Format("#| msgctxt \"{0}\"\n", msg.PreviousContext));
+                    builder.Append(String.Format("#| msgctxt \"{0}\"\n", EscapeString(msg.PreviousContext, false)));
                 }
 
                 if (!String.IsNullOrEmpty(msg.PreviousId))
                 {
-                    builder.Append(String.Format("#| msgid \"{0}\"\n", msg.PreviousId));
+                    builder.Append(String.Format("#| msgid \"{0}\"\n", EscapeString(msg.PreviousId, false)));
                 }
             }
 
             if (!String.IsNullOrEmpty(msg.Context))
             {
-                builder.Append(String.Format("msgctxt \"{0}\"\n", msg.Context.Replace("\n", "\\n\"\n\"")));
+                builder.Append(String.Format("msgctxt \"{0}\"\n", EscapeString(msg.Context)));
             }
 
-            builder.Append(String.Format("msgid \"{0}\"\n", msg.Id.Replace("\n", "\\n\"\n\"")));
+            builder.Append(String.Format("msgid \"{0}\"\n", EscapeString(msg.Id)));
 
             if (!String.IsNullOrEmpty(msg.Plural))
             {
-                builder.Append(String.Format("msgid_plural \"{0}\"\n", msg.Plural.Replace("\n", "\\n\"\n\"")));
+                builder.Append(String.Format("msgid_plural \"{0}\"\n", EscapeString(msg.Plural)));
             }
 
             if (!String.IsNullOrEmpty(msg.Plural) && msg.loc.NumPlurals > 1)
@@ -362,15 +362,20 @@ namespace GettextDotNet.Formats
                 int i = 0;
                 foreach (var Translation in msg.Translations.Concat(Enumerable.Repeat("", msg.loc.NumPlurals - msg.Translations.Length)))
                 {
-                    builder.Append(String.Format("msgstr[{0}] \"{1}\"\n", i++, Translation.Replace("\n", "\\n\"\n\"")));
+                    builder.Append(String.Format("msgstr[{0}] \"{1}\"\n", i++, EscapeString(Translation)));
                 }
             }
             else
             {
-                builder.Append(String.Format("msgstr \"{0}\"\n", msg.Translations[0].Replace("\n", "\\n\"\n\"")));
+                builder.Append(String.Format("msgstr \"{0}\"\n", EscapeString(msg.Translations[0])));
             }
 
             return builder.ToString();
+        }
+
+        private string EscapeString(string str, bool allow_multiple_lines = true)
+        {
+            return str.Replace("\"", "\\\"").Replace("\t", "\\t").Replace("\n", allow_multiple_lines ? "\\n\"\n\"" : "\\n");
         }
         
         private string ProcessMessageString(string str)

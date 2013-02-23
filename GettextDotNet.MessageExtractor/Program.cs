@@ -8,7 +8,9 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Razor;
+using System.Web.Razor.Generator;
 using System.Xml.Linq;
 
 namespace GettextDotNet.MessageExtractor
@@ -28,6 +30,7 @@ namespace GettextDotNet.MessageExtractor
             string comment_prefix = null;
             string output_file = null;
             var base_path = "";
+            var encoding = Encoding.UTF8;
 
             var options = new OptionSet() {
                 { "p|project=", "add a {PROJECT} to extract messages from",
@@ -44,6 +47,8 @@ namespace GettextDotNet.MessageExtractor
                    v => {comment_prefix = v; extract_comments = true; } },
                 { "no-location",  "omit file references for messages", 
                    v => show_location = v != null },
+                { "from-code=",  "omit file references for messages", 
+                   v => encoding = Encoding.GetEncoding(v) },
                 { "h|help",  "show this message and exit", 
                    v => show_help = v != null },
             };            
@@ -89,9 +94,19 @@ namespace GettextDotNet.MessageExtractor
                     // var host = WebRazorHostFactory.CreateHostFromConfig("/");
 
 
-                    RazorEngineHost host = new RazorEngineHost(new CSharpRazorCodeLanguage());
-                    host.DefaultClassName = "TestClass";
-                    host.DefaultNamespace = "TestNamespace";
+                    RazorEngineHost host = new RazorEngineHost(new CSharpRazorCodeLanguage())
+                    {
+                        DefaultClassName = "TestClass",
+                        DefaultNamespace = "TestNamespace",
+                        DefaultBaseClass = "DynamicObject",
+                        GeneratedClassContext = new GeneratedClassContext(
+                             GeneratedClassContext.DefaultExecuteMethodName,
+                             GeneratedClassContext.DefaultWriteMethodName,
+                             GeneratedClassContext.DefaultWriteLiteralMethodName,
+                             "WriteTo",
+                             "WriteLiteralTo",
+                             "HelperResult")
+                    };
 
                     var engine = new RazorTemplateEngine(host);
 
@@ -99,15 +114,13 @@ namespace GettextDotNet.MessageExtractor
                     {
                         // Parse the file using the razor engine
                         GeneratorResults results = null;
-                        using (var fstream = File.OpenRead(Path.Combine(project_base_path, view)))
+                        var vpath = Path.Combine(project_base_path, view);
+                        using (TextReader reader = new StreamReader(File.OpenRead(vpath)))
                         {
-                            using (TextReader reader = new StreamReader(fstream))
-                            {
-                                results = engine.GenerateCode(reader, className: null, rootNamespace: null, sourceFileName: Path.Combine(project_base_path, view));
-                            }
+                            results = engine.GenerateCode(reader, null, null, vpath);
                         }
 
-                        if (results.Success)
+                        if (results != null && results.Success)
                         {
                             // Use CodeDom to generate source code from the CodeCompileUnit
                             var codeDomProvider = new CSharpCodeProvider();
@@ -216,6 +229,10 @@ namespace GettextDotNet.MessageExtractor
             {
                 stream = Console.OpenStandardOutput();
             }
+
+            localization.SetHeader("MIME-Version", "1.0");
+            localization.SetHeader("Content-Type", String.Format("text/plain; charset={0}", encoding.WebName));
+            localization.SetHeader("Content-Transfer-Encoding", "8bit");
 
             // Write to .po file
             // TODO: Support for other formats

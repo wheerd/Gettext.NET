@@ -7,8 +7,8 @@
     <ProjectGuid>{54465166-FF77-4712-B964-CA53F0DAE443}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GetextDotNet.Tools</RootNamespace>
-    <AssemblyName>GetextDotNet.Tools</AssemblyName>
+    <RootNamespace>GettextDotNet.Tools</RootNamespace>
+    <AssemblyName>GettextDotNet.Tools</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -51,9 +51,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gettext.NET\GettextDotNET.csproj">
+    <ProjectReference Include="..\Gettext.NET\GettextDotNet.csproj">
       <Project>{234e2ec5-fecd-4d94-9265-1ecb593f0a25}</Project>
-      <Name>GettextDotNET</Name>
+      <Name>GettextDotNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

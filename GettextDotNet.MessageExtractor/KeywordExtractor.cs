@@ -221,18 +221,9 @@ namespace GettextDotNet.MessageExtractor
         {
             if (expr is LiteralExpressionSyntax)
             {
-                var token = ((LiteralExpressionSyntax)expr).Token;
-
-                /*
-                // Only parse string literals
-                if (token.Kind == SyntaxKind.StringLiteralToken)
-                {
-                    return token.Value as string;
-                }
-                */
-
-                return token.ValueText;
+                return ((LiteralExpressionSyntax)expr).Token.ValueText;
             }
+            // Strings combined by +
             else if (expr is BinaryExpressionSyntax)
             {
                 if (expr.Kind == SyntaxKind.AddExpression)
@@ -249,6 +240,39 @@ namespace GettextDotNet.MessageExtractor
             else if (expr is ParenthesizedExpressionSyntax)
             {
                 return GetString(((ParenthesizedExpressionSyntax)expr).Expression);
+            }
+            // Needed to parse the <text> blocks used in Razor templates
+            // which are wrapped in some complicated lambda expression syntax
+            else if (expr is SimpleLambdaExpressionSyntax)
+            {
+                var lambda = (SimpleLambdaExpressionSyntax)expr;
+                var param = lambda.Parameter.Identifier.ToString();
+                var body = lambda.Body as ObjectCreationExpressionSyntax;
+
+                // Lambda expression: item => new HelperResult
+                if (param.Equals("item") && body != null)
+                {
+                    var block = ((SimpleLambdaExpressionSyntax)body.ArgumentList.Arguments[0].Expression).Body as BlockSyntax;
+
+                    var methodCalls = block.Statements
+                        .Where(e => e is ExpressionStatementSyntax)
+                        .Select(e => ((ExpressionStatementSyntax)e).Expression)
+                        .Where(e => e is InvocationExpressionSyntax)
+                        .Select(e => (InvocationExpressionSyntax)e);
+
+                    // Collect all strings from WriteLiteralTo()-calls
+                    var str = "";
+                    foreach (var mc in methodCalls)
+                    {
+                        if (mc.Expression.ToString().Equals("WriteLiteralTo"))
+                        {
+                            str += GetStringArg(mc.ArgumentList, 1);
+                        }
+                    }
+
+                    // Trim each line to allow html indentation while not completely screwing up the key
+                    return String.Join("\n", str.Split('\n').Select(s => s.Trim())).Trim();
+                }
             }
 
             return null;

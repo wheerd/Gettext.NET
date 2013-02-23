@@ -19,3 +19,8 @@
 /SampleMvcApplication/App_Data/database.ldf
 /SampleMvcApplication/App_Data/database.mdf
 /SampleMvcApplication/App_Data/database_log.ldf
+/SampleMvcApplication/locale/newmessages.pot
+
+/GetextDotNet.Tools/GettextDotNet.Tools.csproj.user
+
+/SampleMvcApplication/Images/Thumbs.db

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: Sample MVC Application\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Manuel Krebber <admin@wheerd.de>\n"
@@ -16,7 +16,7 @@ msgstr ""
 #: Views\Account\_ChangePasswordPartial.cshtml:17
 #, csharp-format
 msgid "Change Password Form"
-msgstr ""
+msgstr "Formular zum Ändern des Kennworts"
 
 #: Views\Account\_ExternalLoginsListPartial.cshtml:6
 #, csharp-format
@@ -26,31 +26,35 @@ msgid ""
 "details on setting up this ASP.NET application to support logging in via "
 "external services."
 msgstr ""
+"Es sind keine externen Authentifizierungsdienste konfiguriert. In <a href="
+"\"http://go.microsoft.com/fwlink/?LinkId=252166\">diesem Artikel</a> finden "
+"Sie weitere Informationen zum Einrichten dieser ASP.NET-Anwendung für die "
+"Unterstützung der Anmeldung über externe Dienste."
 
 #: Views\Account\_ExternalLoginsListPartial.cshtml:16
 #, csharp-format
 msgid "Log in using another service"
-msgstr ""
+msgstr "Mit einem anderen Dienst anmelden"
 
 #: Views\Account\_ExternalLoginsListPartial.cshtml:128
 #, csharp-format
 msgid "Log in using your {0} account"
-msgstr ""
+msgstr "Mit Ihrem {0}-Konto anmelden"
 
 #: Views\Account\_RemoveExternalLoginsPartial.cshtml:5
 #, csharp-format
 msgid "Registered external logins"
-msgstr ""
+msgstr "Registrierte externe Anmeldungen"
 
 #: Views\Account\_RemoveExternalLoginsPartial.cshtml:136
 #, csharp-format
 msgid "Remove"
-msgstr ""
+msgstr "Entfernen"
 
 #: Views\Account\_RemoveExternalLoginsPartial.cshtml:146
 #, csharp-format
 msgid "Remove this {0} credential from your account"
-msgstr ""
+msgstr "Diese {0}-Anmeldeinformationen aus Ihrem Konto entfernen"
 
 #: Views\Account\_SetPasswordPartial.cshtml:4
 #, csharp-format
@@ -58,31 +62,33 @@ msgid ""
 "You do not have a local password for this site. Add a local password so you "
 "can log in without an external login."
 msgstr ""
+"Sie besitzen kein lokales Kennwort für diese Website. FÃ¼gen Sie ein lokales "
+"Kennwort hinzu, damit Sie sich ohne eine externe Anmeldung anmelden können."
 
 #: Views\Account\_SetPasswordPartial.cshtml:13
 #, csharp-format
 msgid "Set Password Form"
-msgstr ""
+msgstr "Formular zum Festlegen des Kennworts"
 
 #: Views\Account\_SetPasswordPartial.cshtml:139
 #, csharp-format
 msgid "Set password"
-msgstr ""
+msgstr "Kennwort festlegen"
 
 #: Views\Account\Login.cshtml:4 Views\Shared\_LoginPartial.cshtml:12
 #, csharp-format
 msgid "Log in"
-msgstr ""
+msgstr "Anmelden"
 
 #: Views\Account\Login.cshtml:13
 #, csharp-format
 msgid "Use a local account to log in."
-msgstr ""
+msgstr "Lokales Konto für die Anmeldung verwenden."
 
 #: Views\Account\Login.cshtml:20
 #, csharp-format
 msgid "Log in Form"
-msgstr ""
+msgstr "Anmeldeformular"
 
 #: Views\Account\Login.cshtml:40 Views\Account\Register.cshtml:2
 #: Views\Account\Register.cshtml:181
@@ -91,62 +97,62 @@ msgstr ""
 #: Views\Shared\_LoginPartial.cshtml:11
 #, csharp-format
 msgid "Register"
-msgstr ""
+msgstr "Registrieren"
 
 #: Views\Account\Login.cshtml:40
 #, csharp-format
 msgid "if you don't have an account."
-msgstr ""
+msgstr ", wenn Sie kein Konto besitzen."
 
 #: Views\Account\Login.cshtml:46
 #, csharp-format
 msgid "Use another service to log in."
-msgstr ""
+msgstr "Einen anderen Dienst zum Anmelden verwenden."
 
 #: Views\Account\Manage.cshtml:2
 #, csharp-format
 msgid "Manage Account"
-msgstr ""
+msgstr "Konto verwalten"
 
 #: Views\Account\Manage.cshtml:12
 #, csharp-format
 msgid "You're logged in as <strong>{0}</strong>."
-msgstr ""
+msgstr "Angemeldet als <strong>{0}</strong>."
 
 #: Views\Account\Manage.cshtml:26
 #, csharp-format
 msgid "Add an external login"
-msgstr ""
+msgstr "Externe Anmeldung hinzufügen"
 
 #: Views\Account\Register.cshtml:8
 #, csharp-format
 msgid "Create a new account."
-msgstr ""
+msgstr "Neues Konto erstellen."
 
 #: Views\Account\Register.cshtml:16
 #, csharp-format
 msgid "Registration Form"
-msgstr ""
+msgstr "Registrierungsformular"
 
 #: Views\Account\ExternalLoginFailure.cshtml:1
 #, csharp-format
 msgid "Login Failure"
-msgstr ""
+msgstr "Anmeldefehler"
 
 #: Views\Account\ExternalLoginFailure.cshtml:7
 #, csharp-format
 msgid "Unsuccessful login with service."
-msgstr ""
+msgstr "Nicht erfolgreiche Anmeldung beim Dienst."
 
 #: Views\Account\ExternalLoginConfirmation.cshtml:8
 #, csharp-format
 msgid "Associate your {0} account."
-msgstr ""
+msgstr "Ordnen Sie Ihr {0}-Konto zu."
 
 #: Views\Account\ExternalLoginConfirmation.cshtml:16
 #, csharp-format
 msgid "Association Form"
-msgstr ""
+msgstr "Zuordnungsformular"
 
 #: Views\Account\ExternalLoginConfirmation.cshtml:18
 #, csharp-format
@@ -155,132 +161,145 @@ msgid ""
 "user name for this site below and click the Confirm button to finish logging "
 "in."
 msgstr ""
+"Sie haben sich erfolgreich authentifiziert mit <strong>{0}</strong>. Bitte "
+"geben Sie unten einen Benutzernamen für diese Website ein, und klicken Sie "
+"dann auf die Schaltfläche \"Bestätigen\", um die Anmeldung abzuschließen."
 
 #: Views\Home\About.cshtml:1 Views\Home\About.cshtml:31
 #: Views\Shared\_Layout.cshtml:24
 #, csharp-format
 msgid "About"
-msgstr ""
+msgstr "Info"
 
 #: Views\Home\About.cshtml:12 Views\Home\About.cshtml:16
 #: Views\Home\About.cshtml:20 Views\Home\About.cshtml:27
 #, csharp-format
 msgid "Use this area to provide additional information."
 msgstr ""
+"Verwenden Sie diesen Bereich, um zusätzliche Informationen zur Verfügung zu "
+"stellen."
 
 #: Views\Home\About.cshtml:25
 #, csharp-format
 msgid "Aside Title"
-msgstr ""
+msgstr "Nebentitel"
 
 #: Views\Home\About.cshtml:30 Views\Shared\_Layout.cshtml:23
 #, csharp-format
 msgid "Home"
-msgstr ""
+msgstr "Startseite"
 
 #: Views\Home\About.cshtml:32 Views\Home\Contact.cshtml:1
 #: Views\Shared\_Layout.cshtml:25
 #, csharp-format
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #: Views\Home\Contact.cshtml:12
 #, csharp-format
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: Views\Home\Contact.cshtml:15
 #, csharp-format
 msgid "Main:"
-msgstr ""
+msgstr "Haupt:"
 
 #: Views\Home\Contact.cshtml:16
 #, csharp-format
 msgid "425.555.0100"
-msgstr ""
+msgstr "425.555.0100"
 
 #: Views\Home\Contact.cshtml:19
 #, csharp-format
 msgid "After Hours:"
-msgstr ""
+msgstr "Außerhalb der regulären Zeiten:"
 
 #: Views\Home\Contact.cshtml:20
 #, csharp-format
 msgid "425.555.0199"
-msgstr ""
+msgstr "425.555.0199"
 
 #: Views\Home\Contact.cshtml:26
 #, csharp-format
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
 #: Views\Home\Contact.cshtml:29
 #, csharp-format
 msgid "Support:"
-msgstr ""
+msgstr "Support:"
 
 #: Views\Home\Contact.cshtml:30
 #, csharp-format
 msgid "<a href=\"mailto:Support@example.com\">Support@example.com</a>"
-msgstr ""
+msgstr "<a href=\"mailto:Support@example.com\">Support@example.com</a>"
 
 #: Views\Home\Contact.cshtml:33
 #, csharp-format
 msgid "Marketing:"
-msgstr ""
+msgstr "Marketing:"
 
 #: Views\Home\Contact.cshtml:34
 #, csharp-format
 msgid "<a href=\"mailto:Marketing@example.com\">Marketing@example.com</a>"
-msgstr ""
+msgstr "<a href=\"mailto:Marketing@example.com\">Marketing@example.com</a>"
 
 #: Views\Home\Contact.cshtml:37
 #, csharp-format
 msgid "General:"
-msgstr ""
+msgstr "General:"
 
 #: Views\Home\Contact.cshtml:38
 #, csharp-format
 msgid "<a href=\"mailto:General@example.com\">General@example.com</a>"
-msgstr ""
+msgstr "<a href=\"mailto:General@example.com\">General@example.com</a>"
 
 #: Views\Home\Contact.cshtml:44
 #, csharp-format
 msgid "Address"
-msgstr ""
+msgstr "Adresse"
 
 #: Views\Home\Contact.cshtml:47
 #, csharp-format
 msgid "One Microsoft Way<br />Redmond, WA 98052-6399"
-msgstr ""
+msgstr "One Microsoft Way<br />Redmond, WA 98052-6399"
 
 #: Views\Home\Index.cshtml:1
 #, csharp-format
 msgid "Home Page"
-msgstr ""
+msgstr "Home Page"
 
 #: Views\Home\Index.cshtml:12
 #, csharp-format
 msgid ""
-"To learn more about ASP.NET MVC visit <a href=\"http://asp.net/mvc\" title="
-"\"ASP.NET MVC Website\">http://asp.net/mvc</a>. The page features "
-"<mark>videos, tutorials, and samples</mark> to help you get the most from "
-"ASP.NET MVC. If you have any questions about ASP.NET MVC visit <a href="
-"\"http://forums.asp.net/1146.aspx/1?MVC\" title=\"ASP.NET MVC Forum\">our "
-"forums</a>."
+"To learn more about ASP.NET MVC visit\n"
+"<a href=\"http://asp.net/mvc\" title=\"ASP.NET MVC Website\">http://asp.net/"
+"mvc</a>.\n"
+"The page features <mark>videos, tutorials, and samples</mark> to help you "
+"get the most from ASP.NET MVC.\n"
+"If you have any questions about ASP.NET MVC visit\n"
+"<a href=\"http://forums.asp.net/1146.aspx/1?MVC\" title=\"ASP.NET MVC Forum"
+"\">our forums</a>."
 msgstr ""
+"Weitere Informationen zu ASP.NET MVC finden Sie unter <a href=\"http://asp."
+"net/mvc\" title=\"ASP.NET MVC Website\">http://asp.net/mvc</a>.Die Seite "
+"enthält <mark>Videos, Lernprogramme und Beispiele,</mark> die Sie bei der "
+"optimalen Nutzung von ASP.NET MVC unterstützen.Wenn Sie Fragen zu ASP.NET "
+"MVC haben, besuchen Sie <a href=\"http://forums.asp.net/1146.aspx/1?MVC\" "
+"title=\"ASP.NET MVC Forum\">unsere Foren</a>."
 
-#: Views\Home\Index.cshtml:21
+#: Views\Home\Index.cshtml:23
 #, csharp-format
 msgid "We suggest the following:"
-msgstr ""
+msgstr "Wir empfehlen Ihnen Folgendes:"
 
-#: Views\Home\Index.cshtml:24
+#: Views\Home\Index.cshtml:26
 #, csharp-format
 msgid "Getting Started"
-msgstr ""
+msgstr "Erste Schritte"
 
-#: Views\Home\Index.cshtml:25
+#: Views\Home\Index.cshtml:27
 #, csharp-format
 msgid ""
 "ASP.NET MVC gives you a powerful, patterns-based way to build dynamic "
@@ -294,225 +313,270 @@ msgid ""
 "the latest web standards.\n"
 "<a href=\"http://go.microsoft.com/fwlink/?LinkId=245151\">Learn more…</a>"
 msgstr ""
+"ASP.NET MVC bietet ein leistungsfähiges, auf Mustern basierendes Verfahren "
+"zum Erstellen dynamischer Websites, die eine klare Trennung von Belangen "
+"ermöglichen und Ihnen die vollständige Steuerung von Markup erlauben, um "
+"eine angenehme und flexible Entwicklung zu gewährleisten.ASP.NET MVC enthält "
+"zahlreiche Funktionen, die eine schnelle und TDD-freundliche Entwicklung zum "
+"Erstellen anspruchsvoller Anwendungen ermöglichen, welche die aktuellsten "
+"Webstandards verwenden.<a href=\"http://go.microsoft.com/fwlink/?"
+"LinkId=245151\">Weitere Informationen…</a>"
 
-#: Views\Home\Index.cshtml:36
+#: Views\Home\Index.cshtml:39
 #, csharp-format
 msgid ""
-"<h5>Add NuGet packages and jump-start your coding</h5> NuGet makes it easy "
-"to install and update free libraries and tools. <a href=\"http://go."
-"microsoft.com/fwlink/?LinkId=245153\">Learn more…</a>"
+"NuGet makes it easy to install and update free libraries and tools.\n"
+"<a href=\"http://go.microsoft.com/fwlink/?LinkId=245153\">Learn more…</a>"
 msgstr ""
+"NuGet vereinfacht das Installieren und Aktualisieren kostenloser "
+"Bibliotheken und Tools.<a href=\"http://go.microsoft.com/fwlink/?"
+"LinkId=245153\">Weitere Informationen…</a>"
 
-#: Views\Home\Index.cshtml:42
+#: Views\Home\Index.cshtml:46
+#, csharp-format
+msgid "Find Web Hosting"
+msgstr "Webhostinganbieter suchen"
+
+#: Views\Home\Index.cshtml:47
 #, csharp-format
 msgid ""
-"<h5>Find Web Hosting</h5> You can easily find a web hosting company that "
-"offers the right mix of features and price for your applications. <a href="
-"\"http://go.microsoft.com/fwlink/?LinkId=245157\">Learn more…</a>"
+"You can easily find a web hosting company that offers the right mix of "
+"features\n"
+"and price for your applications.\n"
+"<a href=\"http://go.microsoft.com/fwlink/?LinkId=245157\">Learn more…</a>"
 msgstr ""
+"Sie können auf einfache Weise ein Webhostingunternehmen finden, das die "
+"richtige Mischung aus Preis und Funktionen für Ihre Anwendungen bietet.<a "
+"href=\"http://go.microsoft.com/fwlink/?LinkId=245157\">Weitere Informationen…"
+"</a>"
 
 #: Views\Shared\Error.cshtml:3 Views\Shared\Error.cshtml:8
 #, csharp-format
 msgid "Error"
-msgstr ""
+msgstr "Fehler"
 
 #: Views\Shared\Error.cshtml:9
 #, csharp-format
 msgid "An error occurred while processing your request."
-msgstr ""
+msgstr "Fehler bei der Verarbeitung Ihrer Anforderung."
 
 #: Views\Shared\_LoginPartial.cshtml:3
 #, csharp-format
-msgid "Hello, {0}"
-msgstr ""
+msgid "Hello, {0}!"
+msgstr "Hallo {0}!"
 
 #: Views\Shared\_LoginPartial.cshtml:3
 #, csharp-format
 msgid "Manage"
-msgstr ""
+msgstr "Verwalten"
 
 #: Views\Shared\_LoginPartial.cshtml:6
 #, csharp-format
 msgid "Log off"
-msgstr ""
+msgstr "Abmelden"
 
 #: Views\Shared\_Layout.cshtml:5
 #, csharp-format
 msgid "{0}  - My ASP.NET MVC Application"
-msgstr ""
+msgstr "{0} - Meine ASP.NET MVC-Anwendung"
 
 #: Views\Shared\_Layout.cshtml:15
 #, csharp-format
 msgid "your logo here"
-msgstr ""
+msgstr "Ihr Logo hier einfügen"
 
 #: Views\Shared\_Layout.cshtml:40
 #, csharp-format
 msgid "&copy; {0} - My ASP.NET MVC Application"
-msgstr ""
+msgstr "&copy; {0} - Meine ASP.NET MVC-Anwendung"
 
-#: SampleMvcApplication\Controllers\AccountController.cs:44
+#: SampleMvcApplication\Controllers\AccountController.cs:45
 #, csharp-format
 msgid "The user name or password provided is incorrect."
-msgstr ""
-
-#: SampleMvcApplication\Controllers\AccountController.cs:131
-#, csharp-format
-msgid "Your password has been changed."
-msgstr ""
+msgstr "Der angegebene Benutzername oder das angegebene Kennwort ist ungültig."
 
 #: SampleMvcApplication\Controllers\AccountController.cs:132
 #, csharp-format
-msgid "Your password has been set."
-msgstr ""
+msgid "Your password has been changed."
+msgstr "Ihr Kennwort wurde geändert."
 
 #: SampleMvcApplication\Controllers\AccountController.cs:133
 #, csharp-format
-msgid "The external login was removed."
-msgstr ""
+msgid "Your password has been set."
+msgstr "Ihr Kennwort wurde festgelegt."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:171
+#: SampleMvcApplication\Controllers\AccountController.cs:134
+#, csharp-format
+msgid "The external login was removed."
+msgstr "Die externe Anmeldung wurde entfernt."
+
+#: SampleMvcApplication\Controllers\AccountController.cs:172
 #, csharp-format
 msgid "The current password is incorrect or the new password is invalid."
 msgstr ""
+"Das aktuelle Kennwort ist nicht korrekt, oder das Kennwort ist ungültig."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:283
-#: SampleMvcApplication\Controllers\AccountController.cs:375
+#: SampleMvcApplication\Controllers\AccountController.cs:284
+#: SampleMvcApplication\Controllers\AccountController.cs:376
 #, csharp-format
 msgid "User name already exists. Please enter a different user name."
 msgstr ""
+"Der Benutzername ist bereits vorhanden. Geben Sie einen anderen "
+"Benutzernamen an."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:378
+#: SampleMvcApplication\Controllers\AccountController.cs:379
 #, csharp-format
 msgid ""
 "A user name for that e-mail address already exists. Please enter a different "
 "e-mail address."
 msgstr ""
+"Für diese E-Mail-Adresse ist bereits ein Benutzername vorhanden. Geben Sie "
+"eine andere E-Mail-Adresse ein."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:381
+#: SampleMvcApplication\Controllers\AccountController.cs:382
 #, csharp-format
 msgid "The password provided is invalid. Please enter a valid password value."
 msgstr ""
+"Das angegebene Kennwort ist ungültig. Geben Sie einen gültigen Kennwortwert "
+"ein."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:384
+#: SampleMvcApplication\Controllers\AccountController.cs:385
 #, csharp-format
 msgid ""
 "The e-mail address provided is invalid. Please check the value and try again."
 msgstr ""
+"Die angegebene E-Mail-Adresse ist ungültig. Ãœberprüfen Sie den Wert, und "
+"wiederholen Sie den Vorgang."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:387
+#: SampleMvcApplication\Controllers\AccountController.cs:388
 #, csharp-format
 msgid ""
 "The password retrieval answer provided is invalid. Please check the value "
 "and try again."
 msgstr ""
+"Die angegebene Antwort auf die Sicherheitsfrage ist ungültig. Überprüfen Sie "
+"den Wert, und wiederholen Sie den Vorgang."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:390
+#: SampleMvcApplication\Controllers\AccountController.cs:391
 #, csharp-format
 msgid ""
 "The password retrieval question provided is invalid. Please check the value "
 "and try again."
 msgstr ""
+"Die angegebene Sicherheitsfrage ist ungültig. Überprüfen Sie den Wert, und "
+"wiederholen Sie den Vorgang."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:393
+#: SampleMvcApplication\Controllers\AccountController.cs:394
 #, csharp-format
 msgid ""
 "The user name provided is invalid. Please check the value and try again."
 msgstr ""
+"Der angegebene Benutzername ist ungültig. Überprüfen Sie den Wert, und "
+"wiederholen Sie den Vorgang."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:396
+#: SampleMvcApplication\Controllers\AccountController.cs:397
 #, csharp-format
 msgid ""
 "The authentication provider returned an error. Please verify your entry and "
 "try again. If the problem persists, please contact your system administrator."
 msgstr ""
+"Vom Authentifizierungsanbieter wurde ein Fehler zurückgegeben. Überprüfen "
+"Sie die Eingabe, und wiederholen Sie den Vorgang. Sollte das Problem "
+"weiterhin bestehen, wenden Sie sich an den zuständigen Systemadministrator."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:399
+#: SampleMvcApplication\Controllers\AccountController.cs:400
 #, csharp-format
 msgid ""
 "The user creation request has been canceled. Please verify your entry and "
 "try again. If the problem persists, please contact your system administrator."
 msgstr ""
+"Die Benutzererstellungsanforderung wurde abgebrochen. Überprüfen Sie die "
+"Eingabe, und wiederholen Sie den Vorgang. Sollte das Problem weiterhin "
+"bestehen, wenden Sie sich an den zuständigen Systemadministrator."
 
-#: SampleMvcApplication\Controllers\AccountController.cs:402
+#: SampleMvcApplication\Controllers\AccountController.cs:403
 #, csharp-format
 msgid ""
 "An unknown error occurred. Please verify your entry and try again. If the "
 "problem persists, please contact your system administrator."
 msgstr ""
+"Unbekannter Fehler. Überprüfen Sie die Eingabe, und wiederholen Sie den "
+"Vorgang. Sollte das Problem weiterhin bestehen, wenden Sie sich an den "
+"zuständigen Systemadministrator."
 
 #: SampleMvcApplication\Controllers\HomeController.cs:15
 #, csharp-format
 msgid "Modify this template to jump-start your ASP.NET MVC application."
 msgstr ""
+"Ändern Sie diese Vorlage als Schnelleinstieg in Ihre ASP.NET MVC-Anwendung."
 
 #: SampleMvcApplication\Controllers\HomeController.cs:23
 #, csharp-format
 msgid "Your app description page."
-msgstr ""
+msgstr "Ihre App-Beschreibungsseite."
 
 #: SampleMvcApplication\Controllers\HomeController.cs:30
 #, csharp-format
 msgid "Your contact page."
-msgstr ""
+msgstr "Ihre Kontaktseite."
 
-#: SampleMvcApplication\Models\AccountModels.cs:33
-#: SampleMvcApplication\Models\AccountModels.cs:61
-#: SampleMvcApplication\Models\AccountModels.cs:76
+#: SampleMvcApplication\Models\AccountModels.cs:36
+#: SampleMvcApplication\Models\AccountModels.cs:64
+#: SampleMvcApplication\Models\AccountModels.cs:79
 #, csharp-format
 msgctxt "DisplayName"
 msgid "User name"
-msgstr ""
+msgstr "Benutzername"
 
-#: SampleMvcApplication\Models\AccountModels.cs:43
+#: SampleMvcApplication\Models\AccountModels.cs:46
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Current password"
-msgstr ""
+msgstr "Aktuelles Kennwort"
 
-#: SampleMvcApplication\Models\AccountModels.cs:47
-#: SampleMvcApplication\Models\AccountModels.cs:80
+#: SampleMvcApplication\Models\AccountModels.cs:50
+#: SampleMvcApplication\Models\AccountModels.cs:83
 #, csharp-format
 msgid "The {0} must be at least {2} characters long."
-msgstr ""
+msgstr "&quote{0}&quote muss mindestens {2} Zeichen lang sein."
 
-#: SampleMvcApplication\Models\AccountModels.cs:49
+#: SampleMvcApplication\Models\AccountModels.cs:52
 #, csharp-format
 msgctxt "DisplayName"
 msgid "New password"
-msgstr ""
+msgstr "Neues Kennwort"
 
-#: SampleMvcApplication\Models\AccountModels.cs:53
+#: SampleMvcApplication\Models\AccountModels.cs:56
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Confirm new password"
-msgstr ""
+msgstr "Neues Kennwort bestätigen"
 
-#: SampleMvcApplication\Models\AccountModels.cs:54
+#: SampleMvcApplication\Models\AccountModels.cs:57
 #, csharp-format
 msgid "The new password and confirmation password do not match."
-msgstr ""
+msgstr "Das neue Kennwort entspricht nicht dem Bestätigungskennwort."
 
-#: SampleMvcApplication\Models\AccountModels.cs:66
-#: SampleMvcApplication\Models\AccountModels.cs:82
+#: SampleMvcApplication\Models\AccountModels.cs:69
+#: SampleMvcApplication\Models\AccountModels.cs:85
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Password"
-msgstr ""
+msgstr "Kennwort"
 
-#: SampleMvcApplication\Models\AccountModels.cs:69
+#: SampleMvcApplication\Models\AccountModels.cs:72
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Remember me?"
-msgstr ""
+msgstr "Speichern?"
 
-#: SampleMvcApplication\Models\AccountModels.cs:86
+#: SampleMvcApplication\Models\AccountModels.cs:89
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Confirm password"
-msgstr ""
+msgstr "Kennwort bestätigen"
 
-#: SampleMvcApplication\Models\AccountModels.cs:87
+#: SampleMvcApplication\Models\AccountModels.cs:90
 #, csharp-format
 msgid "The password and confirmation password do not match."
-msgstr ""
+msgstr "Das Kennwort entspricht nicht dem Bestätigungskennwort."

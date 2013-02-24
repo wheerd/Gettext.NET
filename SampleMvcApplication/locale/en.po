@@ -323,7 +323,7 @@ msgstr ""
 
 #: Views\Shared\_LoginPartial.cshtml:3
 #, csharp-format
-msgid "Hello, {0}"
+msgid "Hello, {0}!"
 msgstr ""
 
 #: Views\Shared\_LoginPartial.cshtml:3
@@ -351,90 +351,90 @@ msgstr ""
 msgid "&copy; {0} - My ASP.NET MVC Application"
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:44
+#: SampleMvcApplication\Controllers\AccountController.cs:45
 #, csharp-format
 msgid "The user name or password provided is incorrect."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:131
+#: SampleMvcApplication\Controllers\AccountController.cs:132
 #, csharp-format
 msgid "Your password has been changed."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:132
+#: SampleMvcApplication\Controllers\AccountController.cs:133
 #, csharp-format
 msgid "Your password has been set."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:133
+#: SampleMvcApplication\Controllers\AccountController.cs:134
 #, csharp-format
 msgid "The external login was removed."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:171
+#: SampleMvcApplication\Controllers\AccountController.cs:172
 #, csharp-format
 msgid "The current password is incorrect or the new password is invalid."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:283
-#: SampleMvcApplication\Controllers\AccountController.cs:375
+#: SampleMvcApplication\Controllers\AccountController.cs:284
+#: SampleMvcApplication\Controllers\AccountController.cs:376
 #, csharp-format
 msgid "User name already exists. Please enter a different user name."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:378
+#: SampleMvcApplication\Controllers\AccountController.cs:379
 #, csharp-format
 msgid ""
 "A user name for that e-mail address already exists. Please enter a different "
 "e-mail address."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:381
+#: SampleMvcApplication\Controllers\AccountController.cs:382
 #, csharp-format
 msgid "The password provided is invalid. Please enter a valid password value."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:384
+#: SampleMvcApplication\Controllers\AccountController.cs:385
 #, csharp-format
 msgid ""
 "The e-mail address provided is invalid. Please check the value and try again."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:387
+#: SampleMvcApplication\Controllers\AccountController.cs:388
 #, csharp-format
 msgid ""
 "The password retrieval answer provided is invalid. Please check the value "
 "and try again."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:390
+#: SampleMvcApplication\Controllers\AccountController.cs:391
 #, csharp-format
 msgid ""
 "The password retrieval question provided is invalid. Please check the value "
 "and try again."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:393
+#: SampleMvcApplication\Controllers\AccountController.cs:394
 #, csharp-format
 msgid ""
 "The user name provided is invalid. Please check the value and try again."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:396
+#: SampleMvcApplication\Controllers\AccountController.cs:397
 #, csharp-format
 msgid ""
 "The authentication provider returned an error. Please verify your entry and "
 "try again. If the problem persists, please contact your system administrator."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:399
+#: SampleMvcApplication\Controllers\AccountController.cs:400
 #, csharp-format
 msgid ""
 "The user creation request has been canceled. Please verify your entry and "
 "try again. If the problem persists, please contact your system administrator."
 msgstr ""
 
-#: SampleMvcApplication\Controllers\AccountController.cs:402
+#: SampleMvcApplication\Controllers\AccountController.cs:403
 #, csharp-format
 msgid ""
 "An unknown error occurred. Please verify your entry and try again. If the "
@@ -456,63 +456,63 @@ msgstr ""
 msgid "Your contact page."
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:33
-#: SampleMvcApplication\Models\AccountModels.cs:61
-#: SampleMvcApplication\Models\AccountModels.cs:76
+#: SampleMvcApplication\Models\AccountModels.cs:36
+#: SampleMvcApplication\Models\AccountModels.cs:64
+#: SampleMvcApplication\Models\AccountModels.cs:79
 #, csharp-format
 msgctxt "DisplayName"
 msgid "User name"
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:43
+#: SampleMvcApplication\Models\AccountModels.cs:46
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Current password"
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:47
-#: SampleMvcApplication\Models\AccountModels.cs:80
+#: SampleMvcApplication\Models\AccountModels.cs:50
+#: SampleMvcApplication\Models\AccountModels.cs:83
 #, csharp-format
 msgid "The {0} must be at least {2} characters long."
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:49
+#: SampleMvcApplication\Models\AccountModels.cs:52
 #, csharp-format
 msgctxt "DisplayName"
 msgid "New password"
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:53
+#: SampleMvcApplication\Models\AccountModels.cs:56
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Confirm new password"
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:54
+#: SampleMvcApplication\Models\AccountModels.cs:57
 #, csharp-format
 msgid "The new password and confirmation password do not match."
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:66
-#: SampleMvcApplication\Models\AccountModels.cs:82
+#: SampleMvcApplication\Models\AccountModels.cs:69
+#: SampleMvcApplication\Models\AccountModels.cs:85
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Password"
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:69
+#: SampleMvcApplication\Models\AccountModels.cs:72
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Remember me?"
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:86
+#: SampleMvcApplication\Models\AccountModels.cs:89
 #, csharp-format
 msgctxt "DisplayName"
 msgid "Confirm password"
 msgstr ""
 
-#: SampleMvcApplication\Models\AccountModels.cs:87
+#: SampleMvcApplication\Models\AccountModels.cs:90
 #, csharp-format
 msgid "The password and confirmation password do not match."
 msgstr ""

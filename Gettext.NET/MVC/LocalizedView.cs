@@ -1,16 +1,14 @@
-using GettextDotNet;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
 
-namespace SampleMvcApplication
+namespace GettextDotNet.MVC
 {
     public abstract class LocalizedView<TModel> : WebViewPage<TModel>
     {
-        public HtmlString _(Func<dynamic,HelperResult> message, params object[] args)
+        public HtmlString _(Func<dynamic, HelperResult> message, params object[] args)
         {
             var key = String.Join("\n", message(null).ToHtmlString().Split('\n').Select(s => s.Trim())).Trim();
 

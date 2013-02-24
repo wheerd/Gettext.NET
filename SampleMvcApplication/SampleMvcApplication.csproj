@@ -159,12 +159,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LocalizingController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="LocalizedView.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -335,11 +333,12 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>"$(ProjectDir)$(OutDir)GettextDotNet.MessageExtractor.exe" -solution="$(SolutionPath)" -project="$(ProjectName)" -c/ -o="$(ProjectDir)locale\newmessages.pot"
+
 if not exist "$(ProjectDir)locale\en.po" copy "$(ProjectDir)locale\newmessages.pot" "$(ProjectDir)locale\en.po"
 "$(ProjectDir)Tools\msgmerge.exe" --backup=none -U "$(ProjectDir)locale\en.po" "$(ProjectDir)locale\newmessages.pot"
 
-if not exist "$(ProjectDir)locale\de.po" copy "$(ProjectDir)locale\messages.po" "$(ProjectDir)locale\de.po"
-"$(ProjectDir)Tools\msgmerge.exe" --backup=none -U "$(ProjectDir)locale\de.po" "$(ProjectDir)locale\messages.po"</PostBuildEvent>
+if not exist "$(ProjectDir)locale\de.po" copy "$(ProjectDir)locale\newmessages.pot" "$(ProjectDir)locale\de.po"
+"$(ProjectDir)Tools\msgmerge.exe" --backup=none -U "$(ProjectDir)locale\de.po" "$(ProjectDir)locale\newmessages.pot"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

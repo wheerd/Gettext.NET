@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
@@ -10,6 +10,7 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using SampleMvcApplication.Filters;
 using SampleMvcApplication.Models;
+using GettextDotNet.MVC;
 
 namespace SampleMvcApplication.Controllers
 {

@@ -35,8 +35,8 @@ namespace GettextDotNet.MessageExtractor
             // -kDisplay!a:!Name:DisplayName
             new LocalizationKeyword
             {
-                Name = "Display",
-                IdName = "Name",
+                Name = "DisplayName",
+                IdArg = 0,
                 DefaultContext = "DisplayName",
                 AttributeAllowed = true
             },
@@ -53,7 +53,16 @@ namespace GettextDotNet.MessageExtractor
                 Name = "Compare",
                 IdName = "ErrorMessage",
                 AttributeAllowed = true
-            }
+            },
+            // -kInternationalization.GetText!m:0,2c!context
+            new LocalizationKeyword
+            {
+                Name = "Internationalization.GetText",
+                IdArg = 0,
+                ContextArg = 2,
+                ContextName = "context",
+                MethodAllowed = true
+            },            
         };
 
         private readonly Dictionary<string, List<LocalizationKeyword>> Keywords;
@@ -162,7 +171,7 @@ namespace GettextDotNet.MessageExtractor
                 }
             }
 
-            if (n != null)
+            if (n != null && (int)n < args.Arguments.Count)
             {
                 var expr = args.Arguments[(int)n].Expression;
 
@@ -236,6 +245,10 @@ namespace GettextDotNet.MessageExtractor
                         return left + right;
                     }
                 }
+                else if (expr.Kind == SyntaxKind.CoalesceExpression)
+                {
+                    return GetString(((BinaryExpressionSyntax)expr).Left) ?? GetString(((BinaryExpressionSyntax)expr).Right);
+                }
             }
             else if (expr is ParenthesizedExpressionSyntax)
             {
@@ -299,8 +312,11 @@ namespace GettextDotNet.MessageExtractor
 
             var refr = fname + ":" + line;
 
-
             var comments = (from trivia in expression.GetLeadingTrivia()
+                            where trivia.Kind == SyntaxKind.SingleLineCommentTrivia
+                                || trivia.Kind == SyntaxKind.DocumentationCommentTrivia
+                            select trivia.ToFullString().Substring(2).Trim()).Concat(
+                            from trivia in expression.GetTrailingTrivia()
                             where trivia.Kind == SyntaxKind.SingleLineCommentTrivia
                                 || trivia.Kind == SyntaxKind.DocumentationCommentTrivia
                             select trivia.ToFullString().Substring(2).Trim()).ToList();

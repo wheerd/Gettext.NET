@@ -55,8 +55,14 @@ namespace GettextDotNet
 			}
         }
 
-        public static string GetText(string message, string language)
+        public static string GetText(string message, string language = null, string context = null)
         {
+            // TODO: Remove this testing stuff
+            if (language == null)
+            {
+                language = "de";
+            }
+
             if (!localizations.ContainsKey(language))
             {
                 language = Settings.WorkingLanguage;
@@ -65,14 +71,14 @@ namespace GettextDotNet
             if (localizations.ContainsKey(language))
             {
                 var localization = localizations[language];
-                var m = localization.GetMessage(message);
+                var m = localization.GetMessage(message, context);
                 return m != null ? (String.IsNullOrEmpty(m.Translations[0]) ? message : m.Translations[0]) : message;
             }
 
             return message;
         }
 
-        public static string GetTextPlural(string message, string plural, int n, string language)
+        public static string GetTextPlural(string message, string plural, int n, string language = null)
         {
             // TODO
             return n == 1? plural : message;

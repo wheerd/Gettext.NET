@@ -24,3 +24,5 @@
 /GetextDotNet.Tools/GettextDotNet.Tools.csproj.user
 
 /SampleMvcApplication/Images/Thumbs.db
+
+/SampleMvcApplication/locale/*.mo

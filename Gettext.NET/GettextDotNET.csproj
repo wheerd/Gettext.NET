@@ -66,6 +66,7 @@
     <Compile Include="MVC\LocalizedView.cs" />
     <Compile Include="MVC\LocalizingController.cs" />
     <Compile Include="DataAnnotations\RequiredAttribute.cs" />
+    <Compile Include="MVC\MVCLocalization.cs" />
     <Compile Include="PluralExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

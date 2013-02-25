@@ -22,6 +22,8 @@ namespace GettextDotNet
             public static string QueryName = "lang";
 
             public static string SessionKey = "lang";
+
+            public static string RouteDataKey = "language";
         }
 
         private static Dictionary<string, Localization> localizations;

@@ -268,7 +268,7 @@ msgstr "One Microsoft Way<br />Redmond, WA 98052-6399"
 #: Views\Home\Index.cshtml:1
 #, csharp-format
 msgid "Home Page"
-msgstr "Home Page"
+msgstr "Startseite"
 
 #: Views\Home\Index.cshtml:12
 #, csharp-format

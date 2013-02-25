@@ -61,6 +61,8 @@
     <Compile Include="Formats\MOFormat.cs" />
     <Compile Include="Formats\POFormat.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="MVC\HelperExtensions.cs" />
+    <Compile Include="MVC\LocalizationHTTPModule.cs" />
     <Compile Include="MVC\LocalizedView.cs" />
     <Compile Include="MVC\LocalizingController.cs" />
     <Compile Include="DataAnnotations\RequiredAttribute.cs" />

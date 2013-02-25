@@ -2,6 +2,7 @@ using GettextDotNet.Formats;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Web;
 
 namespace GettextDotNet
@@ -15,6 +16,12 @@ namespace GettextDotNet
             public static string BasePath = "~/locale/";
 
             public static bool useSubfolders = false;
+
+            public static string CookieName = "lang";
+
+            public static string QueryName = "lang";
+
+            public static string SessionKey = "lang";
         }
 
         private static Dictionary<string, Localization> localizations;
@@ -55,12 +62,16 @@ namespace GettextDotNet
 			}
         }
 
+        public static bool ContainsLanguage(string language)
+        {
+            return localizations.ContainsKey(language);
+        }
+
         public static string GetText(string message, string language = null, string context = null)
         {
-            // TODO: Remove this testing stuff
             if (language == null)
             {
-                language = "de";
+                language = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
             }
 
             if (!localizations.ContainsKey(language))
@@ -72,16 +83,45 @@ namespace GettextDotNet
             {
                 var localization = localizations[language];
                 var m = localization.GetMessage(message, context);
-                return m != null ? (String.IsNullOrEmpty(m.Translations[0]) ? message : m.Translations[0]) : message;
+
+                if (m != null && !String.IsNullOrEmpty(m.Translations[0]))
+                {
+                    return m.Translations[0];
+                }
             }
 
             return message;
         }
 
-        public static string GetTextPlural(string message, string plural, int n, string language = null)
+        public static string GetTextPlural(string message, string plural, int n, string language = null, string context = null)
         {
-            // TODO
-            return n == 1? plural : message;
+            if (language == null)
+            {
+                language = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
+            }
+
+            if (!localizations.ContainsKey(language))
+            {
+                language = Settings.WorkingLanguage;
+            }
+
+            if (localizations.ContainsKey(language))
+            {
+                var localization = localizations[language];
+                var m = localization.GetMessage(message, context);
+
+                if (m != null)
+                {
+                    var p = localization.PluralForms.Evaluate(n);
+
+                    if (!String.IsNullOrEmpty(m.Translations[p]))
+                    {
+                        return m.Translations[p];
+                    }
+                }
+            }
+
+            return n != 1? plural : message;
         }
     }
 }

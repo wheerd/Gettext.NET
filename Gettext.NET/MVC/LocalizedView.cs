@@ -10,28 +10,62 @@ namespace GettextDotNet.MVC
     {
         public HtmlString _(Func<dynamic, HelperResult> message, params object[] args)
         {
-            var key = String.Join("\n", message(null).ToHtmlString().Split('\n').Select(s => s.Trim())).Trim();
-
-            return new HtmlString(String.Format(Internationalization.GetText(key, "de"), args));
+            return _r(message.AsString(), args);
         }
 
-        public string _(string message, params object[] args)
+        public HtmlString _r(string message, params object[] args)
         {
-            return String.Format(Internationalization.GetText(message, "de"), args);
+            return new HtmlString(_(message, args));
         }
 
-        public string _n(string message, string plural, int n, params object[] args)
+        public static string _(string message, params object[] args)
         {
-            object[] newArgs = new object[args.Length + 1];
-            newArgs[0] = n;
-            Array.Copy(args, 0, newArgs, 1, args.Length);
-
-            return String.Format(Internationalization.GetTextPlural(message, plural, n, "de"), newArgs);
+            return String.Format(Internationalization.GetText(message), args);
         }
 
-        public string _c(string context, string message, params object[] args)
+        public HtmlString _n(Func<dynamic, HelperResult> message, Func<dynamic, HelperResult> plural, int n, params object[] args)
         {
-            return String.Format(Internationalization.GetText(message, "de"), args);
+            return _rn(message.AsString(), plural.AsString(), n, args);
+        }
+
+        public HtmlString _rn(string message, string plural, int n, params object[] args)
+        {
+            return new HtmlString(_n(message, plural, n, args));
+        }
+
+        public static string _n(string message, string plural, int n, params object[] args)
+        {
+            return String.Format(Internationalization.GetTextPlural(message, plural, n), args.Prepend(n));
+        }
+
+        public HtmlString _c(string context, Func<dynamic, HelperResult> message, params object[] args)
+        {
+            return _rc(context, message.AsString(), args);
+        }
+
+        public HtmlString _rc(string context, string message, params object[] args)
+        {
+            return new HtmlString(_c(context, message, args));
+        }
+
+        public static string _c(string context, string message, params object[] args)
+        {
+            return String.Format(Internationalization.GetText(message, context: context), args);
+        }
+
+        public HtmlString _nc(string context, Func<dynamic, HelperResult> message, Func<dynamic, HelperResult> plural, int n, params object[] args)
+        {
+            return _rnc(context, message.AsString(), plural.AsString(), n, args);
+        }
+
+        public HtmlString _rnc(string context, string message, string plural, int n, params object[] args)
+        {
+            return new HtmlString(_nc(context, message, plural, n, args));
+        }
+
+        public static string _nc(string context, string message, string plural, int n, params object[] args)
+        {
+            return String.Format(Internationalization.GetTextPlural(message, plural, n, context: context), args.Prepend(n));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace GettextDotNet.MessageExtractor
         {
             Localization localization;
             List<string> files;
-            List<LocalizationKeyword> methods = new List<LocalizationKeyword>();
+            List<LocalizationKeyword> keywords = new List<LocalizationKeyword>(KeywordExtractor.DefaultKeywords);
             HashSet<string> projects = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
             string solution_path = null;
             bool show_help = false;
@@ -31,6 +31,8 @@ namespace GettextDotNet.MessageExtractor
             string output_file = null;
             var base_path = "";
             var encoding = Encoding.UTF8;
+            string controller_context = null;
+            string action_context = null;
 
             var options = new OptionSet() {
                 { "p|project=", "add a {PROJECT} to extract messages from",
@@ -42,13 +44,19 @@ namespace GettextDotNet.MessageExtractor
                    "the output .po {FILE}. If empty the generated .po file is printed to the console.",
                     (string v) => output_file = v },
                 { "k=", "add a {KEYWORD} to be recognized as a translation method",
-                   v => methods.Add(LocalizationKeyword.Parse(v)) },
+                   v => keywords.Add(LocalizationKeyword.Parse(v)) },
                 { "c|add-comments:",  "extract comments (if set only the ones which start with the given {PREFIX})", 
                    v => {comment_prefix = v; extract_comments = true; } },
                 { "no-location",  "omit file references for messages", 
                    v => show_location = v != null },
                 { "from-code=",  "omit file references for messages", 
                    v => encoding = Encoding.GetEncoding(v) },
+                { "C|extract-controllers=",  "extract MVC controller names as translatable strings with the optional {CONTEXT}", 
+                   v => controller_context = v ?? "" },
+                { "A|extract-actions=",  "extract MVC action names as translatable strings with the optional {CONTEXT}", 
+                   v => action_context = v ?? "" },
+                { "clear",  "remove all the default keywords. You can add new ones using the -k option.", 
+                   v => keywords.Clear() },
                 { "h|help",  "show this message and exit", 
                    v => show_help = v != null },
             };            
@@ -66,12 +74,7 @@ namespace GettextDotNet.MessageExtractor
                 return;
             }
 
-            if (methods.Count == 0)
-            {
-                methods.AddRange(KeywordExtractor.DefaultKeywords);
-            }
-
-            var collector = new KeywordExtractor(methods);
+            var collector = new KeywordExtractor(keywords, controller_context, action_context);
 
             // Use files from solution/projects
             if (!show_help && solution_path != null)

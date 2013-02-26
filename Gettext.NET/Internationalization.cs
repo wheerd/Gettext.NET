@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Web;
+using System.Linq;
 
 namespace GettextDotNet
 {
@@ -69,7 +70,7 @@ namespace GettextDotNet
             return localizations.ContainsKey(language);
         }
 
-        public static string GetText(string message, string language = null, string context = null)
+        private static Localization GetLocalization(string language = null)
         {
             if (language == null)
             {
@@ -80,11 +81,25 @@ namespace GettextDotNet
             {
                 language = Settings.WorkingLanguage;
             }
+            
+            return localizations[language];
+        }
 
-            if (localizations.ContainsKey(language))
+        public static string GetText(string message, string language = null, string context = null)
+        {
+            var localization = GetLocalization(language);
+            var m = localization.GetMessage(message, context);
+
+            if (m != null)
             {
-                var localization = localizations[language];
-                var m = localization.GetMessage(message, context);
+                if (!String.IsNullOrEmpty(m.Translations[0]))
+                {
+                    return m.Translations[0];
+                }
+            }
+            else
+            {
+                m = localization.GetMessage(message);
 
                 if (m != null && !String.IsNullOrEmpty(m.Translations[0]))
                 {
@@ -97,33 +112,43 @@ namespace GettextDotNet
 
         public static string GetTextPlural(string message, string plural, int n, string language = null, string context = null)
         {
-            if (language == null)
-            {
-                language = Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
-            }
+            var localization = GetLocalization(language);
 
-            if (!localizations.ContainsKey(language))
-            {
-                language = Settings.WorkingLanguage;
-            }
+            var p = localization.PluralForms.Evaluate(n);
+            var m = localization.GetMessage(message, context);
 
-            if (localizations.ContainsKey(language))
+            if (m != null)
             {
-                var localization = localizations[language];
-                var m = localization.GetMessage(message, context);
-
-                if (m != null)
+                if (!String.IsNullOrEmpty(m.Translations[p]))
                 {
-                    var p = localization.PluralForms.Evaluate(n);
+                    return m.Translations[p];
+                }
+            }
+            else
+            {
+                m = localization.GetMessage(message);
 
-                    if (!String.IsNullOrEmpty(m.Translations[p]))
-                    {
-                        return m.Translations[p];
-                    }
+                if (m != null && !String.IsNullOrEmpty(m.Translations[p]))
+                {
+                    return m.Translations[p];
                 }
             }
 
             return n != 1? plural : message;
+        }
+
+        public static string GetTextReverse(string translation, string language = null, string context = null)
+        {
+            var localization = GetLocalization(language);
+
+            var messages = localization.GetMessageReverse(translation, context).Select(m => m.Id).Distinct();
+
+            if (!messages.Any())
+            {
+                messages = localization.GetMessageReverse(translation).Select(m => m.Id).Distinct();
+            }
+
+            return messages.Count() == 1? messages.First() : null;
         }
     }
 }

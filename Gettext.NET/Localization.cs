@@ -116,6 +116,19 @@ namespace GettextDotNet
         }
 
         /// <summary>
+        /// Gets the message for a specific translation (only simple messages, no plural).
+        /// </summary>
+        /// <param name="translation">The translation.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The messages with that translation and </returns>
+        public IEnumerable<Message> GetMessageReverse(string translation, string context = null)
+        {
+            var messages = Messages.Values.Where(m => m.Translations[0].Equals(translation) && (m.Context ?? "").Equals(context ?? ""));
+
+            return messages;
+        }
+
+        /// <summary>
         /// Adds the specified message to the localization.
         /// </summary>
         /// <param name="msg">The message.</param>

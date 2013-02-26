@@ -1,4 +1,6 @@
-﻿using System.Web.Routing;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using System.Linq;
 using System;
 using System.Globalization;
@@ -7,16 +9,53 @@ namespace GettextDotNet.MVC
 {
     public static class MVCLocalization
     {
-        public static void WrapRoutes()
+        public static LocalizedRoute LocalizeRoute(this RouteCollection routes, Route route, string[] translate_values)
         {
-            var routes = RouteTable.Routes;
+            LocalizedRoute newroute = null;
+
             using (routes.GetReadLock())
             {
-                for (var i = 0; i < routes.Count; i++)
+                var i = routes.IndexOf(route);
+
+                newroute = new LocalizedRoute(route, translate_values);
+
+                if (i != -1)
                 {
-                    routes[i] = new LocalizedRoute(routes[i]);
+                    routes[i] = newroute;
                 }
             }
+
+            return newroute;
+        }
+
+        public static LocalizedRoute MapLocalizedRoute(this RouteCollection routes, string name, string url, string[] translate = null)
+        {
+            return routes.LocalizeRoute(routes.MapRoute(name, url), translate);
+        }
+
+        public static LocalizedRoute MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults, string[] translate = null)
+        {
+            return routes.LocalizeRoute(routes.MapRoute(name, url, defaults), translate);
+        }
+
+        public static LocalizedRoute MapLocalizedRoute(this RouteCollection routes, string name, string url, string[] namespaces, string[] translate)
+        {
+            return routes.LocalizeRoute(routes.MapRoute(name, url, namespaces), translate);
+        }
+
+        public static LocalizedRoute MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults, object constraints, string[] translate = null)
+        {
+            return routes.LocalizeRoute(routes.MapRoute(name, url, defaults, constraints), translate);
+        }
+
+        public static LocalizedRoute MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults, string[] namespaces, string[] translate)
+        {
+            return routes.LocalizeRoute(routes.MapRoute(name, url, defaults, namespaces), translate);
+        }
+
+        public static LocalizedRoute MapLocalizedRoute(this RouteCollection routes, string name, string url, object defaults, object constraints, string[] namespaces, string[] translate)
+        {
+            return routes.LocalizeRoute(routes.MapRoute(name, url, defaults, constraints, namespaces), translate);
         }
     }
 
@@ -24,9 +63,12 @@ namespace GettextDotNet.MVC
     {
         private RouteBase _base;
 
-        public LocalizedRoute(RouteBase route)
+        public readonly string[] TranslatedValues;
+
+        public LocalizedRoute(RouteBase route, string[] translate_values)
         {
             _base = route;
+            TranslatedValues = translate_values ?? new string[0];
         }
 
         public override RouteData GetRouteData(System.Web.HttpContextBase httpContext)
@@ -61,6 +103,19 @@ namespace GettextDotNet.MVC
                 {
                     data.Values.Add(Internationalization.Settings.RouteDataKey, lang);
                 }
+
+                foreach (var key in TranslatedValues)
+                {
+                    if (data.Values.ContainsKey(key))
+                    {
+                        var id = Internationalization.GetTextReverse(data.Values[key].ToString(), lang, "URL");
+
+                        if (id != null)
+                        {
+                            data.Values[key] = id;
+                        }
+                    }
+                }
             }
             else
             {
@@ -90,6 +145,14 @@ namespace GettextDotNet.MVC
             else
             {
                 lang = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
+            }
+
+            foreach (var key in TranslatedValues)
+            {
+                if (values.ContainsKey(key))
+                {
+                    values[key] = Internationalization.GetText(values[key].ToString(), lang, "URL");
+                }
             }
 
             var data = _base.GetVirtualPath(requestContext, values);

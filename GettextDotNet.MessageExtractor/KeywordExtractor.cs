@@ -69,9 +69,19 @@ namespace GettextDotNet.MessageExtractor
 
         private readonly Queue<Tuple<string, SyntaxReference>> Occurences = new Queue<Tuple<string, SyntaxReference>>();
 
-        public KeywordExtractor(IEnumerable<LocalizationKeyword> methods)
+        private readonly string ControllerContext;
+        private readonly string ActionContext;
+
+        private readonly Queue<Tuple<string, SyntaxReference>> Controllers = new Queue<Tuple<string, SyntaxReference>>();
+        private readonly Queue<Tuple<string, SyntaxReference>> Actions = new Queue<Tuple<string, SyntaxReference>>(); 
+
+        private bool insideController = false;
+
+        public KeywordExtractor(IEnumerable<LocalizationKeyword> methods, string controller_context = null, string action_context = null)
         {
             Keywords = methods.Select(m => m.Name).Distinct().ToDictionary(m => "\\b" + m + "$", m => methods.Where(m2 => m2.Name.Equals(m)).ToList());
+            ControllerContext = controller_context;
+            ActionContext = action_context;
         }
 
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
@@ -139,6 +149,43 @@ namespace GettextDotNet.MessageExtractor
             }
         }
 
+        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
+            if (ControllerContext != null)
+            {
+                var modifiers = node.Modifiers.Select(t => t.Value as string).ToArray();
+                var bases = node.BaseList != null ? node.BaseList.Types.Select(t => t.ToString()).ToArray() : new string[0];
+                var className = node.Identifier.ToString();
+
+                if (!modifiers.Any(m => m.Equals("abstract")) && bases.Any(b => b.EndsWith("Controller")) && className.EndsWith("Controller"))
+                {
+                    var controllerName = className.Substring(0, className.Length - "Controller".Length);
+                    Controllers.Enqueue(Tuple.Create(controllerName, node.GetReference()));
+
+                    insideController = true;
+                }
+            }
+
+            base.VisitClassDeclaration(node);
+            insideController = false;
+        }
+
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            if (ActionContext != null && insideController)
+            {
+                var modifiers = node.Modifiers.Select(t => t.Value as string).ToArray();
+                var methodName = node.Identifier.ToString();
+
+                if (modifiers.Any(m => m.Equals("public")) && !modifiers.Any(m => m.Equals("static")) && node.TypeParameterList == null)
+                {
+                    Actions.Enqueue(Tuple.Create(methodName, node.GetReference()));
+                }
+            }
+
+            base.VisitMethodDeclaration(node);
+        }
+
         public Localization ExtractMessages()
         {
             var localization = new Localization();
@@ -151,7 +198,133 @@ namespace GettextDotNet.MessageExtractor
                 }
             }
 
+            AddMessages(localization, Controllers, ControllerContext);
+            AddMessages(localization, Actions, ActionContext);
+
             return localization;
+        }
+
+        private static void AddMessages(Localization localization, IEnumerable<Tuple<string,SyntaxReference>> occurences, string context)
+        {
+            foreach (var occurence in occurences)
+            {
+                var reference = GetSyntaxReference(occurence.Item2);
+                var message = localization.GetMessage(occurence.Item1, context);
+
+                if (message != null)
+                {
+                    message.References.Add(reference);
+                }
+                else
+                {
+                    message = new Message
+                    {
+                        Id = occurence.Item1,
+                        Context = context
+                    };
+                    message.References.Add(reference);
+
+                    localization.Add(message);
+                }
+
+            }
+        }
+
+        private static void ParseMessage(Localization localization, LocalizationKeyword method, SyntaxReference reference)
+        {
+            var node = reference.GetSyntax();
+
+            var refr = GetSyntaxReference(reference);
+
+            // Extract comments before the expression and after it on the same line
+            var expression = node.Ancestors().First(p => p.Parent is BlockSyntax || p is ClassDeclarationSyntax);
+            var comments = (from trivia in expression.GetLeadingTrivia()
+                            where trivia.Kind == SyntaxKind.SingleLineCommentTrivia
+                                || trivia.Kind == SyntaxKind.DocumentationCommentTrivia
+                            select trivia.ToFullString().Substring(2).Trim()).Concat(
+                            from trivia in expression.GetTrailingTrivia()
+                            where trivia.Kind == SyntaxKind.SingleLineCommentTrivia
+                                || trivia.Kind == SyntaxKind.DocumentationCommentTrivia
+                            select trivia.ToFullString().Substring(2).Trim()).ToList();
+
+            string id = "", context = null, plural = null;
+
+            if (node is InvocationExpressionSyntax && method.MethodAllowed)
+            {
+                id = GetStringArg(((InvocationExpressionSyntax)node).ArgumentList, method.IdArg, method.IdName);
+                context = GetStringArg(((InvocationExpressionSyntax)node).ArgumentList, method.ContextArg, method.ContextName);
+                plural = GetStringArg(((InvocationExpressionSyntax)node).ArgumentList, method.PluralArg, method.PluralName);
+            }
+            else if (node is AttributeSyntax && method.AttributeAllowed)
+            {
+                id = GetStringArg(((AttributeSyntax)node).ArgumentList, method.IdArg, method.IdName);
+                context = GetStringArg(((AttributeSyntax)node).ArgumentList, method.ContextArg, method.ContextName);
+                plural = GetStringArg(((AttributeSyntax)node).ArgumentList, method.PluralArg, method.PluralName);
+            }
+            else if (node is ObjectCreationExpressionSyntax && method.ClassAllowed)
+            {
+                var oce = (ObjectCreationExpressionSyntax)node;
+
+                id = GetStringArg(oce.ArgumentList, method.IdArg, method.IdName) ?? GetStringArg(oce.Initializer, method.IdName);
+                context = GetStringArg(oce.ArgumentList, method.ContextArg, method.ContextName) ?? GetStringArg(oce.Initializer, method.ContextName);
+                plural = GetStringArg(oce.ArgumentList, method.PluralArg, method.PluralName) ?? GetStringArg(oce.Initializer, method.PluralName);
+            }
+
+            context = context ?? method.DefaultContext;
+
+            if (id != null)
+            {
+                var message = localization.GetMessage(id, context);
+
+                if (message != null)
+                {
+                    message.References.Add(refr);
+                    message.Plural = message.Plural ?? plural;
+                    message.Comments.AddRange(comments);
+                }
+                else
+                {
+                    message = new Message
+                    {
+                        Id = id,
+                        Context = context,
+                        Comments = comments,
+                        Plural = plural
+                    };
+                    message.References.Add(refr);
+                    message.Flags.Add("csharp-format");
+
+                    localization.Add(message);
+                }
+            }
+        }
+
+        #region Helpers
+
+        private static string GetSyntaxReference(SyntaxReference reference)
+        {
+            var node = reference.GetSyntax();
+
+            // For some weird reason lines are zero-based
+            var line = node.SyntaxTree.GetLineSpan(node.Span, false).StartLinePosition.Line + 1;
+            var fname = node.SyntaxTree.FilePath;
+
+            // Correct line numbers for view (.cshtml) files using the #line directive
+            var expression = node.Ancestors().FirstOrDefault(p => p.Parent is BlockSyntax || p is ClassDeclarationSyntax);
+            if (expression != null)
+            {
+                var line_trivia = expression.GetLeadingTrivia().FirstOrDefault(t => t.Kind == SyntaxKind.LineDirectiveTrivia);
+                if (line_trivia != null && line_trivia.Kind != SyntaxKind.None)
+                {
+                    var info = line_trivia.ToString().Substring(line_trivia.ToString().IndexOf("#line") + 5).TrimStart();
+                    var parts = info.Split(new char[] { ' ', '\t', '\r', '\n' }).Where(p => !String.IsNullOrEmpty(p)).ToArray();
+
+                    line = int.Parse(parts[0]);
+                }
+            }
+
+            return fname + ":" + line;
+
         }
 
         private static string GetStringArg(ArgumentListSyntax args, int? n, string name = null)
@@ -291,86 +464,6 @@ namespace GettextDotNet.MessageExtractor
             return null;
         }
 
-        private static void ParseMessage(Localization localization, LocalizationKeyword method, SyntaxReference reference)
-        {
-            var node = reference.GetSyntax();
-
-            // For some weird reason lines are zero-based
-            var line = node.SyntaxTree.GetLineSpan(node.Span, false).StartLinePosition.Line + 1;
-            var fname = node.SyntaxTree.FilePath;
-
-            // Correct line numbers for view (.cshtml) files using the #line directive
-            var expression = node.Ancestors().First(p => p.Parent is BlockSyntax || p is ClassDeclarationSyntax);
-            var line_trivia = expression.GetLeadingTrivia().FirstOrDefault(t => t.Kind == SyntaxKind.LineDirectiveTrivia);
-            if (line_trivia != null && line_trivia.Kind != SyntaxKind.None)
-            {
-                var info = line_trivia.ToString().Substring(line_trivia.ToString().IndexOf("#line") + 5).TrimStart();
-                var parts = info.Split(new char[] { ' ', '\t', '\r', '\n' }).Where(p => !String.IsNullOrEmpty(p)).ToArray();
-
-                line = int.Parse(parts[0]);
-            }
-
-            var refr = fname + ":" + line;
-
-            var comments = (from trivia in expression.GetLeadingTrivia()
-                            where trivia.Kind == SyntaxKind.SingleLineCommentTrivia
-                                || trivia.Kind == SyntaxKind.DocumentationCommentTrivia
-                            select trivia.ToFullString().Substring(2).Trim()).Concat(
-                            from trivia in expression.GetTrailingTrivia()
-                            where trivia.Kind == SyntaxKind.SingleLineCommentTrivia
-                                || trivia.Kind == SyntaxKind.DocumentationCommentTrivia
-                            select trivia.ToFullString().Substring(2).Trim()).ToList();
-
-            string id = "", context = null, plural = null;
-
-            if (node is InvocationExpressionSyntax && method.MethodAllowed)
-            {
-                id = GetStringArg(((InvocationExpressionSyntax)node).ArgumentList, method.IdArg, method.IdName);
-                context = GetStringArg(((InvocationExpressionSyntax)node).ArgumentList, method.ContextArg, method.ContextName);
-                plural = GetStringArg(((InvocationExpressionSyntax)node).ArgumentList, method.PluralArg, method.PluralName);
-            }
-            else if (node is AttributeSyntax && method.AttributeAllowed)
-            {
-                id = GetStringArg(((AttributeSyntax)node).ArgumentList, method.IdArg, method.IdName);
-                context = GetStringArg(((AttributeSyntax)node).ArgumentList, method.ContextArg, method.ContextName);
-                plural = GetStringArg(((AttributeSyntax)node).ArgumentList, method.PluralArg, method.PluralName);
-            }
-            else if (node is ObjectCreationExpressionSyntax && method.ClassAllowed)
-            {
-                var oce = (ObjectCreationExpressionSyntax)node;
-
-                id = GetStringArg(oce.ArgumentList, method.IdArg, method.IdName) ?? GetStringArg(oce.Initializer, method.IdName);
-                context = GetStringArg(oce.ArgumentList, method.ContextArg, method.ContextName) ?? GetStringArg(oce.Initializer, method.ContextName);
-                plural = GetStringArg(oce.ArgumentList, method.PluralArg, method.PluralName) ?? GetStringArg(oce.Initializer, method.PluralName);
-            }
-
-            context = context ?? method.DefaultContext;
-
-            if (id != null)
-            {
-                var message = localization.GetMessage(id, context);
-
-                if (message != null)
-                {
-                    message.References.Add(refr);
-                    message.Plural = message.Plural ?? plural;
-                    message.Comments.AddRange(comments);
-                }
-                else
-                {
-                    message = new Message
-                    {
-                        Id = id,
-                        Context = context,
-                        Comments = comments,
-                        Plural = plural
-                    };
-                    message.References.Add(refr);
-                    message.Flags.Add("csharp-format");
-
-                    localization.Add(message);
-                }
-            }
-        }
+        #endregion
     }
 }

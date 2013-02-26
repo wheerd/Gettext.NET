@@ -14,13 +14,12 @@ namespace SampleMvcApplication
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
+            routes.MapLocalizedRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                translate: new[] {"controller", "action"}
             );
-
-            MVCLocalization.WrapRoutes();
         }
     }
 }

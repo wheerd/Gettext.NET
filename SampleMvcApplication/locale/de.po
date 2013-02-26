@@ -333,6 +333,11 @@ msgstr ""
 "Webstandards verwenden.<a href=\"http://go.microsoft.com/fwlink/?"
 "LinkId=245151\">Weitere Informationen…</a>"
 
+#: Views\Home\Index.cshtml:38
+#, csharp-format
+msgid "Add NuGet packages and jump-start your coding"
+msgstr "NuGet-Pakete hinzufügen und schnell mit Programmieren loslegen"
+
 #: Views\Home\Index.cshtml:39
 #, csharp-format
 msgid ""
@@ -679,6 +684,34 @@ msgstr "Info"
 msgctxt "URL"
 msgid "Contact"
 msgstr "Kontakt"
+
+msgid "'{0}' and '{1}' do not match."
+msgstr "'{0}' und '{1}' stimmen nicht überein."
+
+msgid "The field {0} is invalid."
+msgstr "Das Feld {0} enthält einen ungültigen Wert."
+
+msgid ""
+"The field {0} must be a string or array type with a maximum length of '{1}'."
+msgstr ""
+"Das Feld {0} muss ein String oder Array mit maximaler Länge von '{1}' sein."
+
+msgid ""
+"The field {0} must be a string or array type with a minimum length of '{1}'."
+msgstr ""
+"Das Feld {0} muss ein String oder Array mit minimaler Länge von '{1}' sein."
+
+msgid "The field {0} must be between {1} and {2}."
+msgstr "Das Feld {0} muss einen Wert zwischen {1} und {2} einthalten."
+
+msgid "The field {0} must match the regular expression '{1}'."
+msgstr "Das Feld {0} muss den regulären Ausdruck '{1}' erfüllen"
+
+msgid "The field {0} must be a string with a maximum length of {1}."
+msgstr "Das Feld {0} darf maximal {1} Zeichen haben."
+
+msgid "The {0} field is required."
+msgstr "Das Feld {0} muss ausgefüllt werden."
 
 #, fuzzy
 #~ msgid "<a href=\"mailto:General@example.com\">Support@example.com</a>"

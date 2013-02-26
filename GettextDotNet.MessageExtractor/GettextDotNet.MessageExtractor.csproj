@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultMessages.cs" />
     <Compile Include="KeywordExtractor.cs" />
     <Compile Include="LocalizationKeyword.cs" />
     <Compile Include="Program.cs">

@@ -301,6 +301,11 @@ msgid ""
 "<a href=\"http://go.microsoft.com/fwlink/?LinkId=245151\">Learn more…</a>"
 msgstr ""
 
+#: Views\Home\Index.cshtml:38
+#, csharp-format
+msgid "Add NuGet packages and jump-start your coding"
+msgstr ""
+
 #: Views\Home\Index.cshtml:39
 #, csharp-format
 msgid ""
@@ -614,4 +619,30 @@ msgstr ""
 #: SampleMvcApplication\Controllers\HomeController.cs:28
 msgctxt "URL"
 msgid "Contact"
+msgstr ""
+
+msgid "'{0}' and '{1}' do not match."
+msgstr ""
+
+msgid "The field {0} is invalid."
+msgstr ""
+
+msgid ""
+"The field {0} must be a string or array type with a maximum length of '{1}'."
+msgstr ""
+
+msgid ""
+"The field {0} must be a string or array type with a minimum length of '{1}'."
+msgstr ""
+
+msgid "The field {0} must be between {1} and {2}."
+msgstr ""
+
+msgid "The field {0} must match the regular expression '{1}'."
+msgstr ""
+
+msgid "The field {0} must be a string with a maximum length of {1}."
+msgstr ""
+
+msgid "The {0} field is required."
 msgstr ""

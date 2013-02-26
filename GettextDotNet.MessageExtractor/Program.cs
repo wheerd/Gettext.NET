@@ -27,6 +27,7 @@ namespace GettextDotNet.MessageExtractor
             bool show_help = false;
             bool show_location = true;
             bool extract_comments = false;
+            bool include_defaults = false;
             string comment_prefix = null;
             string output_file = null;
             var base_path = "";
@@ -57,6 +58,8 @@ namespace GettextDotNet.MessageExtractor
                    v => action_context = v ?? "" },
                 { "clear",  "remove all the default keywords. You can add new ones using the -k option.", 
                    v => keywords.Clear() },
+                { "include-defaults",  "include default messages for data annotation error messages.", 
+                   v => include_defaults = v != null },
                 { "h|help",  "show this message and exit", 
                    v => show_help = v != null },
             };            
@@ -219,8 +222,15 @@ namespace GettextDotNet.MessageExtractor
                 foreach (var message in localization.GetMessages())
                 {
                     message.References = message.References.Select(r => r.StartsWith(base_path) ? r.Substring(base_length) : r).ToList();
+                }                    
+            }
+
+            if (include_defaults)
+            {
+                foreach (var m in Default.Messages)
+                {
+                    localization.Add(new Message{ Id = m });                
                 }
-                    
             }
 
             Stream stream;

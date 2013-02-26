@@ -27,15 +27,21 @@
     </header>
     <p>
         <span class="label">@_("Support:")</span>
-        <span>@_("<a href=\"mailto:Support@example.com\">Support@example.com</a>")</span>
+        <span>@_(@<text>
+            <a href="mailto:Support@example.com">Support@example.com</a>
+        </text>)</span>
     </p>
     <p>
         <span class="label">@_("Marketing:")</span>
-        <span>@_("<a href=\"mailto:Marketing@example.com\">Marketing@example.com</a>")</span>
+        <span>@_(@<text>
+            <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+        </text>)</span>
     </p>
     <p>
         <span class="label">@_("General:")</span>
-        <span>@_("<a href=\"mailto:General@example.com\">General@example.com</a>")</span>
+        <span>@_(@<text>
+            <a href="mailto:General@example.com">General@example.com</a>
+        </text>)</span>
     </p>
 </section>
 
@@ -44,7 +50,9 @@
         <h3>@_("Address")</h3>
     </header>
     <p>
-        @_("One Microsoft Way<br />"+
-           "Redmond, WA 98052-6399")
+        @_(@<text>
+            One Microsoft Way<br />
+            Redmond, WA 98052-6399
+        </text>)
     </p>
 </section>

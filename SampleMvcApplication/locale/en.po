@@ -6,7 +6,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: Views\Account\_ChangePasswordPartial.cshtml:17
+#: Views\Account\_ChangePasswordPartial.cshtml:3
+#: Views\Account\_ChangePasswordPartial.cshtml:158
+#, csharp-format
+msgid "Change password"
+msgstr ""
+
+#: Views\Account\_ChangePasswordPartial.cshtml:10
 #, csharp-format
 msgid "Change Password Form"
 msgstr ""
@@ -14,18 +20,19 @@ msgstr ""
 #: Views\Account\_ExternalLoginsListPartial.cshtml:6
 #, csharp-format
 msgid ""
-"There are no external authentication services configured. See <a href="
-"\"http://go.microsoft.com/fwlink/?LinkId=252166\">this article</a> for "
-"details on setting up this ASP.NET application to support logging in via "
+"There are no external authentication services configured.\n"
+"See <a href=\"http://go.microsoft.com/fwlink/?LinkId=252166\">this article</"
+"a>\n"
+"for details on setting up this ASP.NET application to support logging in via "
 "external services."
 msgstr ""
 
-#: Views\Account\_ExternalLoginsListPartial.cshtml:16
+#: Views\Account\_ExternalLoginsListPartial.cshtml:19
 #, csharp-format
 msgid "Log in using another service"
 msgstr ""
 
-#: Views\Account\_ExternalLoginsListPartial.cshtml:128
+#: Views\Account\_ExternalLoginsListPartial.cshtml:142
 #, csharp-format
 msgid "Log in using your {0} account"
 msgstr ""
@@ -62,7 +69,8 @@ msgstr ""
 msgid "Set password"
 msgstr ""
 
-#: Views\Account\Login.cshtml:4 Views\Shared\_LoginPartial.cshtml:12
+#: Views\Account\Login.cshtml:4 Views\Account\Login.cshtml:214
+#: Views\Shared\_LoginPartial.cshtml:12
 #, csharp-format
 msgid "Log in"
 msgstr ""
@@ -77,18 +85,18 @@ msgstr ""
 msgid "Log in Form"
 msgstr ""
 
+#: Views\Account\Login.cshtml:40
+#, csharp-format
+msgid "{0}, if you don't have an account."
+msgstr ""
+
 #: Views\Account\Login.cshtml:40 Views\Account\Register.cshtml:2
 #: Views\Account\Register.cshtml:181
 #: Views\Account\ExternalLoginConfirmation.cshtml:2
-#: Views\Account\ExternalLoginConfirmation.cshtml:176
+#: Views\Account\ExternalLoginConfirmation.cshtml:185
 #: Views\Shared\_LoginPartial.cshtml:11
 #, csharp-format
 msgid "Register"
-msgstr ""
-
-#: Views\Account\Login.cshtml:40
-#, csharp-format
-msgid "if you don't have an account."
 msgstr ""
 
 #: Views\Account\Login.cshtml:46
@@ -144,9 +152,10 @@ msgstr ""
 #: Views\Account\ExternalLoginConfirmation.cshtml:18
 #, csharp-format
 msgid ""
-"You've successfully authenticated with <strong>{0}</strong>. Please enter a "
-"user name for this site below and click the Confirm button to finish logging "
-"in."
+"You've successfully authenticated with <strong>{0}</strong>.\n"
+"Please enter a user name for this site below and click the Confirm button to "
+"finish\n"
+"Logging in."
 msgstr ""
 
 #: Views\Home\About.cshtml:1 Views\Home\About.cshtml:31
@@ -217,34 +226,36 @@ msgstr ""
 msgid "<a href=\"mailto:Support@example.com\">Support@example.com</a>"
 msgstr ""
 
-#: Views\Home\Contact.cshtml:33
+#: Views\Home\Contact.cshtml:35
 #, csharp-format
 msgid "Marketing:"
 msgstr ""
 
-#: Views\Home\Contact.cshtml:34
+#: Views\Home\Contact.cshtml:36
 #, csharp-format
 msgid "<a href=\"mailto:Marketing@example.com\">Marketing@example.com</a>"
 msgstr ""
 
-#: Views\Home\Contact.cshtml:37
+#: Views\Home\Contact.cshtml:41
 #, csharp-format
 msgid "General:"
 msgstr ""
 
-#: Views\Home\Contact.cshtml:38
+#: Views\Home\Contact.cshtml:42
 #, csharp-format
 msgid "<a href=\"mailto:General@example.com\">General@example.com</a>"
 msgstr ""
 
-#: Views\Home\Contact.cshtml:44
+#: Views\Home\Contact.cshtml:50
 #, csharp-format
 msgid "Address"
 msgstr ""
 
-#: Views\Home\Contact.cshtml:47
+#: Views\Home\Contact.cshtml:53
 #, csharp-format
-msgid "One Microsoft Way<br />Redmond, WA 98052-6399"
+msgid ""
+"One Microsoft Way<br />\n"
+"Redmond, WA 98052-6399"
 msgstr ""
 
 #: Views\Home\Index.cshtml:1
@@ -515,4 +526,92 @@ msgstr ""
 #: SampleMvcApplication\Models\AccountModels.cs:90
 #, csharp-format
 msgid "The password and confirmation password do not match."
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:17
+msgctxt "URL"
+msgid "Account"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\HomeController.cs:10
+msgctxt "URL"
+msgid "Home"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:24
+#: SampleMvcApplication\Controllers\AccountController.cs:34
+msgctxt "URL"
+msgid "Login"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:52
+msgctxt "URL"
+msgid "LogOff"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:64
+#: SampleMvcApplication\Controllers\AccountController.cs:73
+msgctxt "URL"
+msgid "Register"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:100
+msgctxt "URL"
+msgid "Disassociate"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:129
+#: SampleMvcApplication\Controllers\AccountController.cs:144
+msgctxt "URL"
+msgid "Manage"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:207
+msgctxt "URL"
+msgid "ExternalLogin"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:218
+msgctxt "URL"
+msgid "ExternalLoginCallback"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:251
+msgctxt "URL"
+msgid "ExternalLoginConfirmation"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:297
+msgctxt "URL"
+msgid "ExternalLoginFailure"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:303
+msgctxt "URL"
+msgid "ExternalLoginsList"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:311
+msgctxt "URL"
+msgid "RemoveExternalLogins"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\AccountController.cs:363
+msgctxt "URL"
+msgid "ExecuteResult"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\HomeController.cs:12
+msgctxt "URL"
+msgid "Index"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\HomeController.cs:21
+msgctxt "URL"
+msgid "About"
+msgstr ""
+
+#: SampleMvcApplication\Controllers\HomeController.cs:28
+msgctxt "URL"
+msgid "Contact"
 msgstr ""

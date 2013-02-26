@@ -13,7 +13,13 @@ msgstr ""
 "X-Generator: Poedit 1.5.5\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: Views\Account\_ChangePasswordPartial.cshtml:17
+#: Views\Account\_ChangePasswordPartial.cshtml:3
+#: Views\Account\_ChangePasswordPartial.cshtml:158
+#, csharp-format
+msgid "Change password"
+msgstr "Kennwort ändern"
+
+#: Views\Account\_ChangePasswordPartial.cshtml:10
 #, csharp-format
 msgid "Change Password Form"
 msgstr "Formular zum Ändern des Kennworts"
@@ -21,22 +27,23 @@ msgstr "Formular zum Ändern des Kennworts"
 #: Views\Account\_ExternalLoginsListPartial.cshtml:6
 #, csharp-format
 msgid ""
-"There are no external authentication services configured. See <a href="
-"\"http://go.microsoft.com/fwlink/?LinkId=252166\">this article</a> for "
-"details on setting up this ASP.NET application to support logging in via "
+"There are no external authentication services configured.\n"
+"See <a href=\"http://go.microsoft.com/fwlink/?LinkId=252166\">this article</"
+"a>\n"
+"for details on setting up this ASP.NET application to support logging in via "
 "external services."
 msgstr ""
-"Es sind keine externen Authentifizierungsdienste konfiguriert. In <a href="
-"\"http://go.microsoft.com/fwlink/?LinkId=252166\">diesem Artikel</a> finden "
+"Es sind keine externen Authentifizierungsdienste konfiguriert. In<a href="
+"\"http://go.microsoft.com/fwlink/?LinkId=252166\">diesem Artikel</a>finden "
 "Sie weitere Informationen zum Einrichten dieser ASP.NET-Anwendung für die "
 "Unterstützung der Anmeldung über externe Dienste."
 
-#: Views\Account\_ExternalLoginsListPartial.cshtml:16
+#: Views\Account\_ExternalLoginsListPartial.cshtml:19
 #, csharp-format
 msgid "Log in using another service"
 msgstr "Mit einem anderen Dienst anmelden"
 
-#: Views\Account\_ExternalLoginsListPartial.cshtml:128
+#: Views\Account\_ExternalLoginsListPartial.cshtml:142
 #, csharp-format
 msgid "Log in using your {0} account"
 msgstr "Mit Ihrem {0}-Konto anmelden"
@@ -75,7 +82,8 @@ msgstr "Formular zum Festlegen des Kennworts"
 msgid "Set password"
 msgstr "Kennwort festlegen"
 
-#: Views\Account\Login.cshtml:4 Views\Shared\_LoginPartial.cshtml:12
+#: Views\Account\Login.cshtml:4 Views\Account\Login.cshtml:214
+#: Views\Shared\_LoginPartial.cshtml:12
 #, csharp-format
 msgid "Log in"
 msgstr "Anmelden"
@@ -90,19 +98,19 @@ msgstr "Lokales Konto für die Anmeldung verwenden."
 msgid "Log in Form"
 msgstr "Anmeldeformular"
 
+#: Views\Account\Login.cshtml:40
+#, csharp-format
+msgid "{0}, if you don't have an account."
+msgstr "{0}, wenn Sie kein Konto besitzen."
+
 #: Views\Account\Login.cshtml:40 Views\Account\Register.cshtml:2
 #: Views\Account\Register.cshtml:181
 #: Views\Account\ExternalLoginConfirmation.cshtml:2
-#: Views\Account\ExternalLoginConfirmation.cshtml:176
+#: Views\Account\ExternalLoginConfirmation.cshtml:185
 #: Views\Shared\_LoginPartial.cshtml:11
 #, csharp-format
 msgid "Register"
 msgstr "Registrieren"
-
-#: Views\Account\Login.cshtml:40
-#, csharp-format
-msgid "if you don't have an account."
-msgstr ", wenn Sie kein Konto besitzen."
 
 #: Views\Account\Login.cshtml:46
 #, csharp-format
@@ -157,12 +165,13 @@ msgstr "Zuordnungsformular"
 #: Views\Account\ExternalLoginConfirmation.cshtml:18
 #, csharp-format
 msgid ""
-"You've successfully authenticated with <strong>{0}</strong>. Please enter a "
-"user name for this site below and click the Confirm button to finish logging "
-"in."
+"You've successfully authenticated with <strong>{0}</strong>.\n"
+"Please enter a user name for this site below and click the Confirm button to "
+"finish\n"
+"Logging in."
 msgstr ""
-"Sie haben sich erfolgreich authentifiziert mit <strong>{0}</strong>. Bitte "
-"geben Sie unten einen Benutzernamen für diese Website ein, und klicken Sie "
+"Sie haben sich erfolgreich authentifiziert mit <strong>{0}</strong>.Bitte "
+"geben Sie unten einen Benutzernamen für diese Website ein, undklicken Sie "
 "dann auf die Schaltfläche \"Bestätigen\", um die Anmeldung abzuschließen."
 
 #: Views\Home\About.cshtml:1 Views\Home\About.cshtml:31
@@ -235,34 +244,36 @@ msgstr "Support:"
 msgid "<a href=\"mailto:Support@example.com\">Support@example.com</a>"
 msgstr "<a href=\"mailto:Support@example.com\">Support@example.com</a>"
 
-#: Views\Home\Contact.cshtml:33
+#: Views\Home\Contact.cshtml:35
 #, csharp-format
 msgid "Marketing:"
 msgstr "Marketing:"
 
-#: Views\Home\Contact.cshtml:34
+#: Views\Home\Contact.cshtml:36
 #, csharp-format
 msgid "<a href=\"mailto:Marketing@example.com\">Marketing@example.com</a>"
 msgstr "<a href=\"mailto:Marketing@example.com\">Marketing@example.com</a>"
 
-#: Views\Home\Contact.cshtml:37
+#: Views\Home\Contact.cshtml:41
 #, csharp-format
 msgid "General:"
 msgstr "General:"
 
-#: Views\Home\Contact.cshtml:38
+#: Views\Home\Contact.cshtml:42
 #, csharp-format
 msgid "<a href=\"mailto:General@example.com\">General@example.com</a>"
 msgstr "<a href=\"mailto:General@example.com\">General@example.com</a>"
 
-#: Views\Home\Contact.cshtml:44
+#: Views\Home\Contact.cshtml:50
 #, csharp-format
 msgid "Address"
 msgstr "Adresse"
 
-#: Views\Home\Contact.cshtml:47
+#: Views\Home\Contact.cshtml:53
 #, csharp-format
-msgid "One Microsoft Way<br />Redmond, WA 98052-6399"
+msgid ""
+"One Microsoft Way<br />\n"
+"Redmond, WA 98052-6399"
 msgstr "One Microsoft Way<br />Redmond, WA 98052-6399"
 
 #: Views\Home\Index.cshtml:1
@@ -580,3 +591,95 @@ msgstr "Kennwort bestätigen"
 #, csharp-format
 msgid "The password and confirmation password do not match."
 msgstr "Das Kennwort entspricht nicht dem Bestätigungskennwort."
+
+#: SampleMvcApplication\Controllers\AccountController.cs:17
+msgctxt "URL"
+msgid "Account"
+msgstr "Konto"
+
+#: SampleMvcApplication\Controllers\HomeController.cs:10
+msgctxt "URL"
+msgid "Home"
+msgstr "Startseite"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:24
+#: SampleMvcApplication\Controllers\AccountController.cs:34
+msgctxt "URL"
+msgid "Login"
+msgstr "Anmelden"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:52
+msgctxt "URL"
+msgid "LogOff"
+msgstr "Abmelden"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:64
+#: SampleMvcApplication\Controllers\AccountController.cs:73
+msgctxt "URL"
+msgid "Register"
+msgstr "Registrieren"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:100
+msgctxt "URL"
+msgid "Disassociate"
+msgstr "Trennen"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:129
+#: SampleMvcApplication\Controllers\AccountController.cs:144
+msgctxt "URL"
+msgid "Manage"
+msgstr "Verwalten"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:207
+msgctxt "URL"
+msgid "ExternalLogin"
+msgstr "ExterneAnmeldung"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:218
+msgctxt "URL"
+msgid "ExternalLoginCallback"
+msgstr "ExterneAnmeldungCallback"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:251
+msgctxt "URL"
+msgid "ExternalLoginConfirmation"
+msgstr "ExterneAnmeldungBestaetigung"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:297
+msgctxt "URL"
+msgid "ExternalLoginFailure"
+msgstr "ExterneAnmeldungFehler"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:303
+msgctxt "URL"
+msgid "ExternalLoginsList"
+msgstr "ExterneAnmeldungListe"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:311
+msgctxt "URL"
+msgid "RemoveExternalLogins"
+msgstr "ExterneAnmeldungenEntfernen"
+
+#: SampleMvcApplication\Controllers\AccountController.cs:363
+msgctxt "URL"
+msgid "ExecuteResult"
+msgstr "ErgebnisAusfuehren"
+
+#: SampleMvcApplication\Controllers\HomeController.cs:12
+msgctxt "URL"
+msgid "Index"
+msgstr "Inhalt"
+
+#: SampleMvcApplication\Controllers\HomeController.cs:21
+msgctxt "URL"
+msgid "About"
+msgstr "Info"
+
+#: SampleMvcApplication\Controllers\HomeController.cs:28
+msgctxt "URL"
+msgid "Contact"
+msgstr "Kontakt"
+
+#, fuzzy
+#~ msgid "<a href=\"mailto:General@example.com\">Support@example.com</a>"
+#~ msgstr "<a href=\"mailto:Support@example.com\">Support@example.com</a>"

@@ -9,7 +9,7 @@
 
 <p class="message-success">@ViewBag.StatusMessage</p>
 
-<p>@_("You're logged in as <strong>{0}</strong>.", User.Identity.Name)</p>
+<p>@_r("You're logged in as <strong>{0}</strong>.", User.Identity.Name)</p>
 
 @if (ViewBag.HasLocalPassword)
 {

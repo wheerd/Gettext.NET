@@ -15,9 +15,11 @@
     <fieldset>
         <legend>@_("Association Form")</legend>
         <p>
-            @_("You've successfully authenticated with <strong>{0}</strong>. "+
-            "Please enter a user name for this site below and click the Confirm button to finish " +
-            "logging in.", ViewBag.ProviderDisplayName)
+            @_(@<text>
+            You've successfully authenticated with <strong>{0}</strong>.
+            Please enter a user name for this site below and click the Confirm button to finish
+            Logging in.
+            </text>, ViewBag.ProviderDisplayName)
         </p>
         <ol>
             <li class="name">

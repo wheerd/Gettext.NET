@@ -34,10 +34,10 @@
                 @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
             </li>
         </ol>
-        <input type="submit" value="Log in" />
+        <input type="submit" value="@_("Log in")" />
     </fieldset>
     <p>
-        @Html.ActionLink(_("Register"), "Register") @_("if you don't have an account.")
+        @_r("{0}, if you don't have an account.", Html.ActionLink(_("Register"), "Register"))
     </p>
 }
 </section>

@@ -1,8 +1,7 @@
-using GettextDotNet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace GettextDotNet.Tests
 {
     [TestClass]
     public class PluralExpressionTest
@@ -12,7 +11,7 @@ namespace Tests
         [TestMethod]
         public void TestParsing()
         {
-            Dictionary<string, PluralForm> tests = new Dictionary<string, PluralForm>() {    
+            var tests = new Dictionary<string, PluralForm>() {    
                 {"n == 1 ? 0 : 1", n => n == 1 ? 0 : 1},
                 {"0", n => 0},
                 {"n != 1", n => n != 1? 1 : 0},

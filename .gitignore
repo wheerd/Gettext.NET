@@ -26,3 +26,5 @@
 /SampleMvcApplication/Images/Thumbs.db
 
 /SampleMvcApplication/locale/*.mo
+/*.suo
+/*.user

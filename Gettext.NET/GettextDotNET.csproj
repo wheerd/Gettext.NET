@@ -53,6 +53,7 @@
     <Compile Include="DataAnnotations\RangeAttribute.cs" />
     <Compile Include="DataAnnotations\RegularExpressionAttribute.cs" />
     <Compile Include="DataAnnotations\StringLengthAttribute.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Formats\JSONFormat.cs" />
     <Compile Include="Formats\ResXFormat.cs" />
     <Compile Include="Internationalization.cs" />
@@ -67,7 +68,9 @@
     <Compile Include="MVC\LocalizingController.cs" />
     <Compile Include="DataAnnotations\RequiredAttribute.cs" />
     <Compile Include="MVC\MVCLocalization.cs" />
-    <Compile Include="PluralExpression.cs" />
+    <Compile Include="Plurals\Operation.cs" />
+    <Compile Include="Plurals\PluralExpression.cs" />
+    <Compile Include="Plurals\PluralExpressionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

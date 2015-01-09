@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GettextDotNet.Plurals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GettextDotNet.Tests
